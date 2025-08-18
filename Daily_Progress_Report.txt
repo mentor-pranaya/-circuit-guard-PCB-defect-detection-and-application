@@ -1,0 +1,7 @@
+Date: 18 Aug 2025
+  
+  Tasks Done Today:
+
+Downloaded and extracted PCB dataset
+
+Checked annotation XML files, images & type of defects

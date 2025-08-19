@@ -5,3 +5,6 @@ Date: 18 Aug 2025
 Downloaded and extracted PCB dataset
 
 Checked annotation XML files, images & type of defects
+
+IDE - VS Code (Primary)
+Secondary Tool - Jupyter Notebook

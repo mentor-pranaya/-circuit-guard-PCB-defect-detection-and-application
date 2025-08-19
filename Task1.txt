@@ -1,0 +1,4 @@
+Task1:Data understanding and setup
+Understanding Dataset in the provided link and have to start with the preprocessing steps.
+In day1 i have created a branch in the GitHub. And get to know about how to download the data from the link. And as the question given that have to compare two dataset with same number of images but different size like 32/32 and 1024/1024 which will provide more information to the machine. so i have researched and learned about how the size is going to effect the overall machine.
+I am going to use Visual Studio code(vs code) for this project.

@@ -1,0 +1,9 @@
+Date : 18/08/2025
+
+Tasks Completed :
+1. Downloaded the dataset and explored it
+2. Learned the different types of defects and what they are
+3. Explored each type of the defect
+
+
+IDE (I am going to work with) - VS Code

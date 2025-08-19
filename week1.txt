@@ -1,0 +1,4 @@
+Week1 - 18 August 2025
+ Downloaded the dataset.
+ Checked the annotation files.
+ Set up my IDE(VScode) for the project.

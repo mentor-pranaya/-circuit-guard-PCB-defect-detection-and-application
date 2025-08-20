@@ -1,0 +1,9 @@
+Date: 19/08/2025
+  
+  Tasks Done by Today:
+
+Download and extract PCB dataset :
+
+Checked annotation XML files, images & type of defects.
+
+IDE - Jupyter Notebook

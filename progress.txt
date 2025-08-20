@@ -1,0 +1,4 @@
+Day 1 (20 Aug 2025)
+- Downloaded and understood the dataset provided.
+
+IDE, which I'll be working on - VS Code

@@ -7,3 +7,12 @@ Tasks Completed :
 
 
 IDE (I am going to work with) - VS Code
+
+
+
+Date : 19/09/2025
+
+Tasks completed and ongoing :
+1. Analysing the images
+2. Locating the defects 
+3. Performing image subtraction by comparing the defected ones and the correct ones

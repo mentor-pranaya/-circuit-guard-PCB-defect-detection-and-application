@@ -1,0 +1,11 @@
+DATE:19-08-2025
+
+project:circuit guard PCB defect detection and application.
+
+I had to know about the data understanding and setup
+
+then later I accept the intivation of the GitHub repository.i had create my respective branch in that repository.
+
+I successfully downloaded the PCB_dataset.
+
+IDE which I used for this project is Visual Studio Code(VS Code).

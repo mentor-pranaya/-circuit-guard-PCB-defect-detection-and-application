@@ -1,4 +1,9 @@
 Week1 - 18 August 2025
- Downloaded the dataset.
- Checked the annotation files.
- Set up my IDE(VScode) for the project.
+ >Downloaded the dataset.
+ >Checked the annotation files.
+ >Set up my IDE(VScode) for the project.
+
+Week1 -19 August 2025
+ >After understanding the Dataset
+ >Started preprocessing the given Dataset
+ 

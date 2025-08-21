@@ -8,3 +8,21 @@ Checked annotation XML files, images & type of defects
 
 IDE - VS Code (Primary)
 Secondary Tool - Jupyter Notebook
+
+
+Date : 20 Aug 2025
+
+Added initial PCB defect detection preprocessing and data cleaning scripts
+
+- Structured datasets for circuit guard PCB defect detection
+- Implemented data normalization and edge-case handling
+- Prepared substraction process workflow for analysis
+
+
+Date : 21 Aug 2025
+
+Update: Implemented defect detection roadmap and analysis workflow
+
+- Added detailed plan for PCB defect detection using subtraction process
+- Documented steps for handling narrow and large datasets with edge cases
+- Updated scripts for preprocessing and dataset evaluation

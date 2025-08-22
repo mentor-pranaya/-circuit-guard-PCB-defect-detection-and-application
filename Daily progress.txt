@@ -7,3 +7,12 @@ Download and extract PCB dataset :
 Checked annotation XML files, images & type of defects.
 
 IDE - Jupyter Notebook
+
+
+Date : 21/08/2025
+
+Add PCB defect detection preprocessing and data cleaning scripts.
+
+~Structured datasets for circuit guard PCB defect detection.
+~Implemented data normalization and edge case handling.
+~Prepared substraction process workflow for analysis.

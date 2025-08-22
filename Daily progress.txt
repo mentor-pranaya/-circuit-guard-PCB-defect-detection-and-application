@@ -13,6 +13,5 @@ Date : 21/08/2025
 
 Add PCB defect detection preprocessing and data cleaning scripts.
 
-~Structured datasets for circuit guard PCB defect detection.
-~Implemented data normalization and edge case handling.
+~Structured dataset for circuit guard PCB defect detection.
 ~Prepared substraction process workflow for analysis.

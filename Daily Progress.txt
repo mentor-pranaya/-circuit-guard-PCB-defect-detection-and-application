@@ -27,3 +27,9 @@ Date : 22/09/2025
 Tasks completed :
 1. Completed images subtraction for all the images 
 2. Trying to implement Otsu's thresholding to remove the noise in the processed images
+
+Date : 24/09/2025
+
+Tasks completed :
+1. Applied Otsu's thresholding to some of the images i got after image subtraction 
+2. Analyzed those output images and learnt about it

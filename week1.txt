@@ -5,5 +5,13 @@ Week1 - 18 August 2025
 
 Week1 -19 August 2025
  >After understanding the Dataset
- >Started preprocessing the given Dataset
+ >Started preprocessing the given Datasets
+
+Week1 -20 August 2025
+ >cleaned the given Data
+ >Learnt about image subtraction
+Week1 -21 August 2025
+ >Compared the used PCB with the missing hole
+Week1 -22 August 2025
+ >Implementing image subtraction for all other images
  

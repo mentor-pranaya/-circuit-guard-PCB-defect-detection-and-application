@@ -14,4 +14,5 @@ Week1 -21 August 2025
  >Compared the used PCB with the missing hole
 Week1 -22 August 2025
  >Implementing image subtraction for all other images
- 
+Week1 -23 August 2025
+ >Working with every defected PCB

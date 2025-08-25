@@ -8,7 +8,7 @@ Tasks Completed :
 IDE (I am going to work with) - VS Code
 
 
-Date : 19/09/2025
+Date : 19/08/2025
 
 Tasks completed and ongoing :
 1. Analysing the images
@@ -16,20 +16,27 @@ Tasks completed and ongoing :
 3. Performing image subtraction by comparing the defected ones and the correct ones
 
 
-Date : 20/09/2025
+Date : 20/08/2025
 
 Tasks completed :
 1. Explored about image subtraction and otsu's thresholding more deeply 
 
 
-Date : 22/09/2025
+Date : 22/08/2025
 
 Tasks completed :
 1. Completed images subtraction for all the images 
 2. Trying to implement Otsu's thresholding to remove the noise in the processed images
 
-Date : 24/09/2025
+Date : 24/08/2025
 
 Tasks completed :
 1. Applied Otsu's thresholding to some of the images i got after image subtraction 
 2. Analyzed those output images and learnt about it
+
+
+Date : 25/08/2025
+
+Tasks completed :
+1. Completed image subtraction and otsu's thresholding for most of the images 
+2. Only few images are left, currently working on it.

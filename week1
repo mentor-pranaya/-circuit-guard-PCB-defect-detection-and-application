@@ -15,3 +15,5 @@ Here i am comparing the defected pcb(Missing hole) with the pcb used to identify
 This worked will process with complete dataset.
 AUG 22nd:
 Tried applying the image subtraction process for all the images in the dataset.
+AUG 23rd:
+Done applying image subtraction process to the dataset and saved all subtracted images in one folder. 

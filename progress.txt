@@ -1,18 +1,18 @@
 DATE:19-08-2025
 
-project:circuit guard PCB defect detection and application.
+    project:circuit guard PCB defect detection and application.
 
-I had to know about the data understanding and setup
+   I had to know about the data understanding and setup
 
-then later I accept the intivation of the GitHub repository.i had create my respective branch in that repository.
+   then later I accept the intivation of the GitHub repository.i had create my respective branch in that repository.
 
-I successfully downloaded the PCB_dataset.
+   I successfully downloaded the PCB_dataset.
 
-IDE which I used for this project is Visual Studio Code(VS Code).
+   IDE which I used for this project is Visual Studio Code(VS Code).
 
 DATE:20-08-2025
-Carefully observed dataset structure, features, and distribution.
-learning about how Subtraction works for a folder and trying to test it.
+    Carefully observed dataset structure, features, and distribution.
+    learning about how Subtraction works for a folder and trying to test it.
 
 DATE:21-08-2025 
     Verified Subtraction and done for rest folders.
@@ -24,6 +24,8 @@ DATE:22-08-2025
 DATE:25-08-2025
       week-2 .
       know about the contour extration and ROI(region of interest) segmentation.
+      and doing the subtraction  work on remaining images. 
+
 
 
 

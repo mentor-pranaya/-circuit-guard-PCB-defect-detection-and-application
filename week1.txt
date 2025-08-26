@@ -1,3 +1,6 @@
 Day 1(18th Aug) - Explored the dataset (Thinking of vscode or google colab would choose the best one after exploring)
 Day 2(19th Aug) - VSCODE (IDE) Understood the dataset and Prepared the steps to follow
 Day 3(20th Aug) - Performed Subtraction for a folder and tested 
+Day 4(21st Aug) - Verified Subtraction and done for rest folders
+Day 5(22nd Aug) - Created dataset Description
+Day 6(25th Aug) - Explored about contour

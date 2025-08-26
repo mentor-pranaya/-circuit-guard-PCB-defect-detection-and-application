@@ -40,3 +40,10 @@ Date : 25/08/2025
 Tasks completed :
 1. Completed image subtraction and otsu's thresholding for most of the images 
 2. Only few images are left, currently working on it.
+
+
+Date : 26/08/2025
+
+Tasks completed :
+1. Completed image subtraction and otsu's thresholding for all the defect images
+2. Learning about contour and ROI.

@@ -1,0 +1,21 @@
+The dataset used in this project is a Printed Circuit Board (PCB) defect dataset derived from the DeepPCB benchmark dataset. 
+It contains pairs of defect-free reference PCB images and defective PCB test images, along with annotations of six common PCB defect types.
+The dataset is designed for:
+Defect detection (finding differences between template and test images).
+Defect localization (extracting bounding boxes around defect regions).
+Defect classification (training CNN models to identify defect type).
+
+Defect Categories
+The dataset covers 6 common types of PCB defects:
+Missing Hole – Drilled hole missing from the board.
+Mouse Bite – Small notches on the edges of the PCB.
+Open Circuit – Breaks in the copper connection.
+Short Circuit – Extra copper bridging between connections.
+Spur – Unwanted thin copper trace sticking out.
+Spurious Copper – Extra copper areas not part of the design.
+
+rotation/ contains rotated versions of defect images to improve model generalization.
+Each defect folder has a *_angles.txt file (e.g., Spur_angles.txt) which specifies the rotation angle applied to each sample.
+
+Annotations
+XML files containing the info about the defect, bounding box coordinates and defect class labels.

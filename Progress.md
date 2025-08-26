@@ -10,7 +10,7 @@ IDE-Visual Studio Code
 
 18-08-25
 
-1.Downloaded the DeepPCB dataset 
+1.Downloaded the DeepPCB dataset
 
 2.Explored dataset contains(templates,test images,annotations)
 
@@ -51,16 +51,6 @@ IDE-Visual Studio Code
 1.Implemented subtraction and Otsu thresholding on the dataset
 
 2.Analyzed the outputs against the actual images.
-
-
-
-25-08-25
-
-1\. Implemented subtraction and Otsu thresholding for all the images in the dataset.
-
-2\. Learned about contours.
-
-3\. Implemented and analyzed contours.
 
 
 

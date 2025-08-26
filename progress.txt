@@ -18,7 +18,12 @@ DATE:21-08-2025
     Verified Subtraction and done for rest folders.
 
 DATE:22-08-2025
-  
+     1.Implemented subtraction and Otsu thresholding on the dataset
+
+     2.Analyzed the outputs against the actual images.
+DATE:25-08-2025
+      week-2 .
+      know about the contour extration and ROI(region of interest) segmentation.
 
 
 

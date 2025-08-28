@@ -1,0 +1,28 @@
+PCB Defect Dataset Overview:
+The dataset used in this project is adapted from the DeepPCB benchmark dataset, which is widely applied in automated optical inspection research. It provides a collection of paired images, where each pair contains a flawless PCB reference image and its corresponding defective PCB sample. Each defect sample is accompanied by annotation files that describe the location and type of defect present.
+This dataset has been structured to support three major computer vision tasks:
+Detecting whether a PCB contains a defect.
+Pinpointing the exact location of defective regions using bounding boxes.
+Training deep learning models to recognize different categories of PCB faults.
+Defect Types and Sample Distribution
+
+Six common types of PCB defects are included:
+Missing Hole – Holes that should have been drilled are absent. (115 samples)
+Mouse Bite – The PCB edge contains small notches or irregular cutouts. (115 samples)
+Open Circuit – Copper traces are broken, causing gaps in connections. (116 samples)
+Short Circuit – Extra copper causes unintended bridging between traces. (116 samples)
+Spur – A thin stray copper trace sticks out from a connection. (115 samples)
+Spurious Copper – Unwanted copper areas appear that are not part of the design. (116 samples)
+In total, the dataset contains 693 defect images across all categories.
+
+Data Augmentation:
+To enhance model robustness, a separate rotation directory is included. This folder contains rotated versions of the defect samples. For each defect type, an *_angles.txt file (e.g., Spur_angles.txt) records the exact rotation angles applied to its samples.
+
+Annotation Format:
+Each defective image has a corresponding XML annotation file. These annotations provide:
+The defect label (class name).
+Bounding box coordinates marking the defective region.
+Metadata related to the defect instance.
+
+Applications:
+This dataset is designed for building and evaluating machine learning pipelines in PCB quality inspection, particularly for defect detection, localization, and classification tasks. With a balanced distribution of six defect types and clear annotations, it serves as a reliable benchmark for deep learning research in manufacturing defect analysis.

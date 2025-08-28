@@ -47,3 +47,9 @@ Date : 26/08/2025
 Tasks completed :
 1. Completed image subtraction and otsu's thresholding for all the defect images
 2. Learning about contour and ROI.
+
+
+Date : 28/08/2025
+
+Tasks completed and ongoing :
+1. Working on ROI and exploring

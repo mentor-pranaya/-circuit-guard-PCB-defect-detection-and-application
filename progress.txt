@@ -18,9 +18,13 @@ DATE:22-08-2025
 
 DATE:25-08-2025
       week-2 .
-      know about the contour extration and ROI(region of interest) segmentation.
+      know about the contour extraction and ROI(region of interest) segmentation.
       and doing the subtraction  work on remaining images. 
 
+DATE:26-08-2025
+      week-2.
+      Complete the data understanding and the subtraction.Update the github with the dataset details, python code for subtraction part.
+      i will continue the process of understanding about the contour extraction.
 
 
 

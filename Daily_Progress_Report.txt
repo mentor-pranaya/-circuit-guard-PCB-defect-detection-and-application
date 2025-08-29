@@ -21,13 +21,49 @@ Added initial PCB defect detection preprocessing and data cleaning scripts
 
 Date : 21 Aug 2025
 
-Update: Implemented defect detection roadmap and analysis workflow
+Update: Started planning PCB defect detection workflow
 
-- Added detailed plan for PCB defect detection using subtraction process
-- Documented steps for handling narrow and large datasets with edge cases
-- Updated scripts for preprocessing and dataset evaluation
+- Outlined roadmap for PCB defect detection using subtraction
+- Planned folder structure for dataset and outputs
+- Listed defect types and edge cases like Mouse bite and Missing hole
+
+Date : 22 Aug 2025
+
+Update: Began image preprocessing
+
+- Loaded PCB and defective images in grayscale
+- Resized images for uniformity
+- Tested initial subtraction on a few sample images
+
+Date : 23 Aug 2025
+
+Update: Worked on subtraction pipeline
+
+- Applied absolute difference between reference and defective PCBs
+- Created preliminary binary masks using thresholding
+- Observed noise issues and minor misalignment effects
+
+
+Date : 27 Aug 2025
+
+Update: Improved subtraction results
+
+- Added Gaussian blur to reduce noise
+- Tuned threshold values to avoid highlighting whole image
+- Checked subtraction results on different defect types
+
+Date : 28 Aug 2025
+
+Update: Started contour extraction
+
+- Extracted contours from defect masks using cv2.findContours
+- Filtered small contours to reduce noise
+- Began drawing bounding rectangles for ROI visualization
 
 Date : 29 Aug 2025
-- ✅ Completed subtraction part
-- Updated code for substraction
-- Working on Contour and ROI
+
+Update: Refining ROI segmentation
+
+- ✅ Subtraction part working reliably
+- Updating code for contour extraction and ROI highlighting
+- Testing detection on multiple defect categories; still refining parameters

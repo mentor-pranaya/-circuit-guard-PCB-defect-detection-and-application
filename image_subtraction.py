@@ -2,7 +2,7 @@ import cv2
 import os
 
 # ✅ Define the base dataset folder first
-base_folder = r"C:\Users\Dell\Downloads\PCB_DATASET\PCB_DATASET"
+base_folder = r"C:\Users\devak\Downloads\PCB_DATASET"
 
 # Folders
 pcb_used_folder = os.path.join(base_folder, "PCB_USED")
@@ -54,3 +54,4 @@ for defect_type in os.listdir(images_folder):
         cv2.imwrite(save_path, subtracted_img)
 
 print(f"\n🎯 All subtracted images are organized into defect-type folders inside: {subtracted_folder}")
+

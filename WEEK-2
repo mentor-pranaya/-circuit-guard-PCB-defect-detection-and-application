@@ -1,0 +1,8 @@
+During week 2,I have focused on processing PCB images to identify and isolate defect regions for further analysis:
+
+->Applied image subtraction between defect-free templates and test PCB images to create “difference maps,” highlighting possible defects.
+->Converted images to grayscale and used thresholding techniques (such as Otsu’s method) to separate defect areas from the background
+->Performed contour detection to find the exact boundaries of each defect in the processed images.
+->Extracted Regions of Interest (ROIs) by cropping around each detected defect, creating smaller images that isolate defect areas.
+->Saved and organized cropped defect ROIs by defect type, preparing a clean dataset for training a classification model in the next phase.
+

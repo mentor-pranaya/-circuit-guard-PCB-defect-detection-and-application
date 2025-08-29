@@ -1,0 +1,26 @@
+📌 Week 2 Progress – PCB Defect Detection
+📝 Agenda
+🎯 Contour Detection and Region of Interest (ROI)
+
+💡 Discussion Points
+✅ Completed data understanding and implemented image subtraction
+
+📂 Updated GitHub with:
+
+📊 Dataset details
+
+💻 Python code for subtraction part
+
+🔍 Started working on contour detection and ROI
+
+❓ Question to explore:
+
+Why do we need contour detection and ROI when subtraction already highlights defects?
+What additional value does it bring? (To be discussed in the next session)
+
+🚀 Action Items
+📌 Complete the Week 1 tasks (dataset understanding + subtraction)
+
+🖼️ Continue work on contour detection and ROI
+
+🤔 Research and document: Why contour detection & ROI are useful in defect detection pipelines

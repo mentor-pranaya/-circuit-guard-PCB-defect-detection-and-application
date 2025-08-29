@@ -26,3 +26,8 @@ Update: Implemented defect detection roadmap and analysis workflow
 - Added detailed plan for PCB defect detection using subtraction process
 - Documented steps for handling narrow and large datasets with edge cases
 - Updated scripts for preprocessing and dataset evaluation
+
+Date : 29 Aug 2025
+- ✅ Completed subtraction part
+- Updated code for substraction
+- Working on Contour and ROI

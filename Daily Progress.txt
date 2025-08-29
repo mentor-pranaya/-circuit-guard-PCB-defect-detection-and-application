@@ -53,3 +53,9 @@ Date : 28/08/2025
 
 Tasks completed and ongoing :
 1. Working on ROI and exploring
+
+
+Date : 29/08/2025
+
+Tasks completed :
+1. Almost completed contour and ROI extraction

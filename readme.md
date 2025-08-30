@@ -72,3 +72,47 @@ This ensures that:
 - The dataset is clean,  
 - The defect regions are correctly isolated,  
 - The workflow for PCB defect detection is properly set up.  
+
+
+---
+
+Module 2 – ROI Extraction  
+
+After subtraction and mask generation, the next step is extracting Regions of Interest (ROIs) from the binary masks.  
+
+Process:  
+- Use OpenCV to detect contours of defects.  
+- Extract bounding boxes and crop each defect region.  
+- Label ROIs automatically based on filenames (e.g., 01_missing_hole_01.jpg → missing_hole).  
+- Save cropped ROIs into class-specific folders for model training.  
+
+Command:  
+  python milestone1/module2_roiextract.py
+
+Outputs:  
+- outputs_module2/bbox/ → defect visualizations with bounding boxes  
+- outputs_module2/rois/<class>/ → cropped and labeled ROI samples  
+- roi_metadata.csv → structured metadata for all ROIs  
+
+Example roi_metadata.csv:  
+row_id,image_name,mask_name,contour_id,class,x,y,w,h,area,roi_path  
+0,01_missing_hole_01.jpg,01_missing_hole_01_mask.png,0,missing_hole,123,45,32,28,896,outputs_module2/rois/missing_hole/01_missing_hole_01_c0.png  
+1,01_missing_hole_01.jpg,01_missing_hole_01_mask.png,1,missing_hole,220,60,25,25,625,outputs_module2/rois/missing_hole/01_missing_hole_01_c1.png  
+2,01_missing_hole_01.jpg,01_missing_hole_01_mask.png,2,missing_hole,310,72,30,30,900,outputs_module2/rois/missing_hole/01_missing_hole_01_c2.png  
+
+Flowchart – ROI Extraction Workflow:  
+Binary Mask → Find Contours (OpenCV) → Bounding Box Extraction → Crop ROI → Assign Class Label → Save ROI → Metadata CSV + Visualization  
+
+Deliverables:  
+- ROI extraction pipeline (module2_roiextract.py)  
+- Cropped and labeled ROI samples (outputs_module2/rois)  
+- Visualization of defect contours (outputs_module2/bbox)  
+- Metadata CSV (roi_metadata.csv)  
+
+Summary:  
+- Dataset is preprocessed and aligned.  
+- Defects are isolated with subtraction + thresholding.  
+- ROIs extracted, cropped, labeled, and saved for training.  
+- Visualization and metadata confirm correct ROI extraction.  
+
+This completes Milestone 1 and Module 2, preparing data for Milestone 2 (EfficientNet CNN training).  

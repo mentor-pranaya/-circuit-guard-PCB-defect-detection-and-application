@@ -1,0 +1,38 @@
+# 🖼️ PCB Defect Detection Dataset (Created using Image Subtraction)
+
+## 📌 About This Dataset  
+This dataset was created by me as part of my work on **Printed Circuit Board (PCB) defect detection**.  
+I started with two sets of images:  
+- **Good PCB images** (without defects)  
+- **Defective PCB images** (with defects)  
+
+Using the **image subtraction method**, I subtracted the good PCB images from the defective PCB images.  
+This subtraction clearly highlighted the defective regions, which I then saved as a new dataset.  
+
+---
+
+## 📂 Dataset Contents  
+The dataset has three main parts:  
+1. **Good PCB Images** – Clean PCBs with no issues  
+2. **Defective PCB Images** – PCBs with different defects  
+3. **Subtraction Results** – Highlighted defect regions after subtraction  
+
+---
+
+## ⚡ Defects Included  
+The defective PCBs in my dataset contain the following categories:  
+
+- 🕳️ **Missing Hole**  
+- 🐭 **Mouse Bite**  
+- 🔌 **Open Circuit**  
+- ⚡ **Short Spur**  
+- 🧩 **Spurious Copper**  
+
+---
+
+## 📊 How My Dataset Looks  
+- Each defect type has its own folder.  
+- Subtraction images clearly show the **difference between good and defective PCBs**.  
+- Images are stored in `.png` and `.jpg` format.  
+
+Example folder structure:  

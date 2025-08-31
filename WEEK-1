@@ -1,5 +1,17 @@
-Downloaded the dataset successfully.
-understand the dataset
-Explored the data in detail.
-Done image substraction
-IDE:- VS Code 
+Aug 18:
+Downloaded the dataSet.
+Aug 19:
+went through the folder and checked each folder and understand the dataset.
+Made a setup in VS Code.
+Checked whether the dataset is cleaned or not.
+I went through the question asked in the session.
+Aug 20:
+i started learning about what is image subtraction why it is needed to the project.
+Started learning about directories and path implementing.
+Aug 21:
+Started implementing the code for single pcb defect image vs single good image to get the difference of the data.
+Got output clearly with black-background and defects in white dots.
+Aug 22:
+Implemented the whole code and applied all the images in the dataset.
+Compared with all defects.
+Output obtained.

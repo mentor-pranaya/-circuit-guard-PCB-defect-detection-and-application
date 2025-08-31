@@ -1,48 +1,39 @@
 import cv2
 import numpy as np
 
-# ✅ Correct paths (only one PCB_DATASET folder)
-img1 = cv2.imread(r"C:\infosys spring board intenship\PCB_DATASET\PCB_DATASET\PCB_USED\01.JPG")
-img2 = cv2.imread(r"C:\infosys spring board intenship\PCB_DATASET\PCB_DATASET\images\Missing_hole\01_missing_hole_01.jpg")
+# Paths
+good_pcb_path = r"Address of orginal pcb image "
+defect_pcb_path = r"Adress of defected pcb image"
+save_path = r"adress where the image is to saved"
 
-# 🔍 Debug check for missing files
-if img1 is None:
-    print("Error: img1 not found")
-    exit()
-if img2 is None:
-    print("Error: img2 not found")
-    exit()
+# Load images
+good_pcb = cv2.imread(good_pcb_path)
+defective_pcb = cv2.imread(defect_pcb_path)
 
-# Resize both images to same size (important for subtraction)
-img2 = cv2.resize(img2, (img1.shape[1], img1.shape[0]))
+if good_pcb is None or defective_pcb is None:
+    print("Error: Could not load one or both images.")
+    exit()
 
 # Convert to grayscale
-gray1 = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
-gray2 = cv2.cvtColor(img2, cv2.COLOR_BGR2GRAY)
+good_pcb_gray = cv2.cvtColor(good_pcb, cv2.COLOR_BGR2GRAY)
+defective_pcb_gray = cv2.cvtColor(defective_pcb, cv2.COLOR_BGR2GRAY)
 
-# Compute absolute difference
-diff = cv2.absdiff(gray1, gray2)
+# Resize defective image if shape mismatch
+if good_pcb_gray.shape != defective_pcb_gray.shape:
+    defective_pcb_gray = cv2.resize(defective_pcb_gray, (good_pcb_gray.shape[1], good_pcb_gray.shape[0]))
 
-# Threshold the difference
-_, thresh = cv2.threshold(diff, 30, 255, cv2.THRESH_BINARY)
+# Difference
+diff = cv2.absdiff(good_pcb_gray, defective_pcb_gray)
 
-# Dilate to make defects visible
-kernel = np.ones((3,3), np.uint8)
-thresh = cv2.dilate(thresh, kernel, iterations=2)
+# Threshold (highlight defects)
+_, defect_mask = cv2.threshold(diff, 30, 255, cv2.THRESH_BINARY)
 
-# Find contours of defects
-contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+# Create output image (white = defect, black = normal)
+output = np.zeros_like(good_pcb_gray)
+output[defect_mask > 0] = 255
 
-# Draw bounding boxes on differences
-for cnt in contours:
-    if cv2.contourArea(cnt) > 20:   # ignore tiny noise
-        x, y, w, h = cv2.boundingRect(cnt)
-        cv2.rectangle(img2, (x, y), (x+w, y+h), (0, 0, 255), 2)
-
-# Show results
-cv2.imshow("Original PCB", img1)
-cv2.imshow("Defected PCB", img2)
-cv2.imshow("Differences", thresh)
-
+# Save and show
+cv2.imwrite(save_path, output)
+cv2.imshow("Detected Defects", output)
 cv2.waitKey(0)
 cv2.destroyAllWindows()

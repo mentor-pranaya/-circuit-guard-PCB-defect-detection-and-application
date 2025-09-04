@@ -2,7 +2,7 @@ import cv2
 import os
 import numpy as np
 
-# Paths and dirs
+# Paths
 BASE_DIR = r"C:\Users\devak\Downloads\PCB_DATASET"
 REFERENCE_PCB_DIR = os.path.join(BASE_DIR, "PCB_USED")
 DEFECT_IMAGES_DIR = os.path.join(BASE_DIR, "images")
@@ -10,9 +10,9 @@ MASKED_DIR = os.path.join(BASE_DIR, "Subtracted_Images", "Masked")
 
 os.makedirs(MASKED_DIR, exist_ok=True)
 
-# Function to preprocess and subtract
+# Function to preprocess and subtract with border mask
 
-def preprocess_and_subtract(reference_path, defect_path):
+def preprocess_and_subtract(reference_path, defect_path, border_thickness=10):
     ref_img = cv2.imread(reference_path, cv2.IMREAD_GRAYSCALE)
     defect_img = cv2.imread(defect_path, cv2.IMREAD_GRAYSCALE)
 
@@ -33,6 +33,19 @@ def preprocess_and_subtract(reference_path, defect_path):
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     defect_mask = cv2.morphologyEx(defect_mask, cv2.MORPH_OPEN, kernel, iterations=1)
 
+    # Apply Border Mask (ignore edges of the PCB)
+    h, w = defect_mask.shape
+    border_mask = np.zeros_like(defect_mask, dtype=np.uint8)
+    cv2.rectangle(
+        border_mask,
+        (border_thickness, border_thickness),
+        (w - border_thickness, h - border_thickness),
+        255,
+        -1
+    )
+
+    defect_mask = cv2.bitwise_and(defect_mask, border_mask)
+
     return defect_mask
 
 # Main loop
@@ -51,10 +64,10 @@ for defect_category in os.listdir(DEFECT_IMAGES_DIR):
         reference_img_path = os.path.join(REFERENCE_PCB_DIR, pcb_number)
 
         if not os.path.exists(reference_img_path):
-            print(f" Reference PCB not found for {img_name}")
+            print(f"⚠️ Reference PCB not found for {img_name}")
             continue
 
-        defect_mask = preprocess_and_subtract(reference_img_path, defect_img_path)
+        defect_mask = preprocess_and_subtract(reference_img_path, defect_img_path, border_thickness=10)
         cv2.imwrite(os.path.join(masked_category, img_name), defect_mask)
 
-print("\n Subtraction completed.")lighted images saved under: {SUBTRACTED_DIR}")
+print("\n✅ Subtraction completed.")

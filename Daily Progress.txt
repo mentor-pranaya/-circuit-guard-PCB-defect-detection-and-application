@@ -59,3 +59,11 @@ Date : 29/08/2025
 
 Tasks completed :
 1. Almost completed contour and ROI extraction
+
+
+Date : 05/09/2025
+
+Tasks completed :
+1. Completed ROI part
+2. Created the CSV file
+3. Looking into the EfficientNet

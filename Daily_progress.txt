@@ -1,21 +1,20 @@
+Week1:
 Downloaded the dataset successfully.
 Explored the data in detail.
 IDE:- VS Code 
-
-Aug 25th:
 Understood what image subtraction is and why it is required for PCB defect detection.
 Applied image subtraction between defect-free and defected PCB images to generate difference maps.
 Learned how thresholding highlights the defective regions after subtraction.
 
-Aug 26th:
+Week2:
 Implemented ROI extraction using contour detection to isolate defect areas.
 Cropped and saved ROIs class-wise for further training and classification.
-
-Aug 27th:
 Verified that contour detection helps localize defects accurately.
 Understood how ROI extraction prepares data for the CNN model.
 
-Aug 28th:
+Week3:
 Completed subtraction, contour detection, and ROI extraction workflow.
 Confirmed that the dataset is now ready for model training.
-
+Focused on EfficientNet and image preprocessing.
+Reviewed EfficientNet, specifically the B4 architecture, understanding why it is preferred for feature extraction
+Started Implementing the EfficientNet in PyTorch.

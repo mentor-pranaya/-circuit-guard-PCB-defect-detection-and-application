@@ -1,3 +1,4 @@
+
 DATE:19-08-2025
    project:circuit guard PCB defect detection and application.
    I had to know about the data understanding and setup
@@ -28,6 +29,19 @@ DATE:26-08-2025
 
 DATE:27-08-2025, 28-08-2025, 29-08-2025
     these 3 days ,i will totally worked on contour extraction section and completed the contour extraction on dataset.
+
+DATE:01-09-2025(3rd week)
+    starting my work on ROI segmentation.
+DATE:02-09-2025
+     continue my work on ROI segmentation.
+DATE:03-09-2025
+  know about the topic of the EfficientNet-B4.
+DATE:04-09-2025,05-09-2025
+   revise the subtraction part,contour extraction part and ROI part. discuss about the 
+   EfficientNet model
+
+
+
 
 
 

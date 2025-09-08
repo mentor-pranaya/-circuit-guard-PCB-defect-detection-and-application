@@ -67,3 +67,10 @@ Tasks completed :
 1. Completed ROI part
 2. Created the CSV file
 3. Looking into the EfficientNet
+
+
+Date : 08/09/2025
+
+Tasks Completed and Ongoing :
+1. Completed building the model
+2. Started to train the model

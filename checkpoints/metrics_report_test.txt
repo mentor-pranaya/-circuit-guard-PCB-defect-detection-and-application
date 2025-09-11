@@ -1,0 +1,14 @@
+Test Acc: 0.8557
+
+                 precision    recall  f1-score   support
+
+   Missing_hole     0.9759    0.9878    0.9818        82
+     Mouse_bite     0.9341    0.9043    0.9189        94
+   Open_circuit     0.9600    0.8675    0.9114        83
+          Short     0.9512    0.9070    0.9286        86
+           Spur     0.7083    0.6343    0.6693       134
+Spurious_copper     0.8092    0.8855    0.8457       297
+
+       accuracy                         0.8557       776
+      macro avg     0.8898    0.8644    0.8759       776
+   weighted avg     0.8564    0.8557    0.8547       776

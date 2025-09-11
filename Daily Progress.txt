@@ -81,3 +81,8 @@ Date : 10/09/2025
 * Feeling a bit stuck, restarting from ROI part
 * May need little extra time 
 * But I will make sure to complete by this week
+
+
+Date : 11/09/2025
+
+Training the model...

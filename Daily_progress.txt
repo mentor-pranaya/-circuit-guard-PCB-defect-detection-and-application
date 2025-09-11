@@ -18,3 +18,8 @@ Confirmed that the dataset is now ready for model training.
 Focused on EfficientNet and image preprocessing.
 Reviewed EfficientNet, specifically the B4 architecture, understanding why it is preferred for feature extraction
 Started Implementing the EfficientNet in PyTorch.
+
+Week4:
+Successfully trained the Model and tested on the ROI image.
+Testing Pipeline(image_subtraction+Roi_extraction+model) is under process and will be completed till friday
+

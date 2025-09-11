@@ -16,3 +16,29 @@ Week1 -22 August 2025
  >Implementing image subtraction for all other images
 Week1 -23 August 2025
  >Working with every defected PCB
+Week2 -25 August 2025
+ >Researched about ROI and contour detection
+Week2 -26 August 2025
+ >worked with ROI part
+Week2 -27 August 2025
+ >completed with ROI
+ >started with Contour
+Week2 -28 August 2025
+ >completed with ROI and Contour part
+Week3 -1 September 2025
+ >Gone through Efficientnet.
+Week3 -2 September 2025
+ >saw what is Efficientnet Architecture
+Week3 -3 September 2025
+ >saw about efficientnet architecture B4
+Week3 -4 September 2025
+ >did the cropping part in ROI
+Week3 -5 September 2025
+ >Started building efficientnet model using Pytorch
+ >CSV file for training the input
+Week4 -8 September 2025
+ >completed Building the efficientnet model
+Week4 -9 September 2025
+ >training the model
+Week4 -10 September 2025
+ >Model training Part

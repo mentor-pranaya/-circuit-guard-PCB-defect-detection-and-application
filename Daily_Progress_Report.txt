@@ -67,3 +67,75 @@ Update: Refining ROI segmentation
 - ✅ Subtraction part working reliably
 - Updating code for contour extraction and ROI highlighting
 - Testing detection on multiple defect categories; still refining parameters
+
+Date : 01 Sep 2025
+
+Update: Started EfficientNet-B4 Model Training
+
+- explored Colab and EfficientNet
+- Initialized EfficientNet-B4 model in PyTorch.
+- Configured Adam optimizer and CrossEntropyLoss.
+- Started first training epochs, observing stable loss and improving accuracy.
+
+Date : 02 Sep 2025
+
+Update: Continued Model Training
+
+- Monitored training accuracy and loss carefully.
+- Validation accuracy steadily improving towards 97%.
+- Implemented early stopping to prevent overfitting.
+- Saved best model checkpoint after validation improved.
+
+Date : 03 Sep 2025
+
+Update: Finalized Model Training
+
+- Completed full training process.
+- Final validation accuracy reached ~97%.
+- Loss curves stabilized → model training process stable and repeatable.
+- Final trained model saved successfully as efficientnet_b4.pth.
+
+Date : 04 Sep 2025
+
+Update: Implemented Inference Pipeline
+
+- Built inference code to test new unseen ROI images.
+- Ran prediction successfully on several test images.
+- Generated annotated images with predicted defect type labels displayed.
+
+Date : 05 Sep 2025
+
+Update: Evaluated Predictions
+
+- Compared predictions against ground truth for test set.
+- Generated final evaluation report CSV containing image filename, predicted class, ground truth, and correctness.
+
+Date : 08 Sep 2025
+
+Update: Preparing for Final Real-World Testing
+
+- Gathered new actual PCB images to run full inference pipeline.
+- Verified that input images are aligned and high quality.
+
+Date : 09 Sep 2025
+
+Update: Ran Final Real-World Inference Testing
+
+- Tested the model on fresh unseen PCB images.
+- Successfully predicted defect types and saved annotated images.
+
+Date : 10 Sep 2025
+
+Update: Verified and Validated Real-World Results
+
+- Compared inference predictions against manual ground truth annotations.
+- Recorded accuracy, precision, recall metrics.
+- Annotated test images with predicted defect class saved in structured folder.
+
+Date : 11 Sep 2025 (Today)
+
+Update: Final Testing and Report Generation
+
+- Confirmed consistent prediction match rate ≥97%.
+- Low false positive and negative rate validated.
+- Annotated test images visually reviewed → Results aligned with expectations.

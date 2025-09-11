@@ -4,7 +4,7 @@ Week1 - 18 August 2025
  >Set up my IDE(VScode) for the project.
 
 Week1 -19 August 2025
- >After understanding the Dataset
+ >After understanding the Dataset.
  >Started preprocessing the given Datasets
 
 Week1 -20 August 2025

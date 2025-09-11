@@ -4,3 +4,13 @@ Day 3(20th Aug) - Performed Subtraction for a folder and tested
 Day 4(21st Aug) - Verified Subtraction and done for rest folders
 Day 5(22nd Aug) - Created dataset Description
 Day 6(25th Aug) - Explored about contour
+Day 7(26th Aug) - Coded the contour part
+Day 8(28th Aug) - Explored Roi extraction 
+Day 9(29th Aug) - Roi extraction done and pushed the codes into Git 
+Day 10(1st Sep) - Explored about CNN
+Day 11(2nd Sep)  - Read the documentation of Efficinet and understood different efficinetNet B0,B1,B2..B4
+Day 12(3rd Sep)  - Understood the architecture of EfficinetB4
+Day 13(4th Sep)  - Explored the Layers in it and difference between normal cnn layer and EfficientNet
+Day 14(5th Sep)  - Discussed about what images are used for Model Traning
+Day 15(8th Sep)  - Traning the model
+Day 16(9th Sep)  - Changed hyperparameters to improve accuracy 

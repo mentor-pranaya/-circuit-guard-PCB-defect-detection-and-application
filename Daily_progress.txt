@@ -22,4 +22,5 @@ Started Implementing the EfficientNet in PyTorch.
 Week4:
 Successfully trained the Model and tested on the ROI image.
 Testing Pipeline(image_subtraction+Roi_extraction+model) is under process and will be completed till friday
+Completed and Successfully build a testing Pipeline where image is taken and goes through image subtraction --> Roi Extraction --> Model Prediction 
 

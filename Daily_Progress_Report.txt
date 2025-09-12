@@ -7,7 +7,7 @@ Downloaded and extracted PCB dataset
 Checked annotation XML files, images & type of defects
 
 IDE - VS Code (Primary)
-Secondary Tool - Jupyter Notebook
+Secondary Tool - Google Colab
 
 
 Date : 20 Aug 2025
@@ -139,3 +139,22 @@ Update: Final Testing and Report Generation
 - Confirmed consistent prediction match rate ≥97%.
 - Low false positive and negative rate validated.
 - Annotated test images visually reviewed → Results aligned with expectations.
+
+Date : 11 Sep 2025
+
+Update: Final Testing and Report Generation
+
+✅ Confirmed consistent prediction match rate ≥97%.
+✅ Low false positive and negative rate validated.
+✅ Annotated test images visually reviewed → Results aligned with expectations.
+
+Date : 12 Sep 2025
+
+Update: Preparing Final Evaluation Report Document
+
+Compiled all results:
+Accuracy metrics
+Loss and accuracy graphs
+Confusion matrix
+Sample annotated images
+Drafted clear explanation of the inference pipeline steps for final report.

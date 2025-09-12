@@ -2,9 +2,9 @@ import cv2
 import os
 import csv
 
-input_folder = r"C:\Users\kavya\PCB_Defect_Detection\Image subtraction"
-output_folder = r"C:\Users\kavya\PCB_Defect_Detection\ROIs"
-csv_file_path = r"C:\Users\kavya\PCB_Defect_Detection\roi_labels.csv"
+input_folder = path_to_the_subtracted_image_folder
+output_folder = path_to_save_the_roi_images
+csv_file_path = path_to_save_the_csv
 
 os.makedirs(output_folder, exist_ok=True)
 roi_counter = 0

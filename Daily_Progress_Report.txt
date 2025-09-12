@@ -158,3 +158,17 @@ Loss and accuracy graphs
 Confusion matrix
 Sample annotated images
 Drafted clear explanation of the inference pipeline steps for final report.
+
+Classification Report:
+                 precision    recall  f1-score   support
+
+   Missing_hole       1.00      0.99      0.99        79
+     Mouse_bite       0.99      0.96      0.97        79
+   Open_circuit       0.97      0.99      0.98        76
+          Short       1.00      0.99      0.99        77
+           Spur       0.94      1.00      0.97        75
+Spurious_copper       1.00      0.97      0.99        80
+
+       accuracy                           0.98       466
+      macro avg       0.98      0.98      0.98       466
+   weighted avg       0.98      0.98      0.98       466

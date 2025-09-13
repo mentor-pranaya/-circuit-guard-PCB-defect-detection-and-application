@@ -1,221 +1,260 @@
+# ===========================
+# SETUP
+# ===========================
+!pip install torch torchvision matplotlib pandas --quiet
+
 import os
 import pandas as pd
+from collections import Counter
+from PIL import Image
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.data import Dataset, DataLoader
-from torchvision import transforms
-from PIL import Image
-from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
+from torchvision import transforms, models
+from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.amp import autocast, GradScaler
+import time
 import matplotlib.pyplot as plt
-import numpy as np
-from efficientnet_pytorch import EfficientNet
+from sklearn.model_selection import train_test_split
+from google.colab import files
+import zipfile
 
-# =========================
-# Dataset
-# =========================
-class PCB_Dataset(Dataset):
-    def __init__(self, csv_file, root_dir, transform=None):
-        self.data = pd.read_csv(csv_file)
-        self.root_dir = root_dir
+# ===========================
+# CREATE FOLDERS
+# ===========================
+os.makedirs("PCB_DATASET/ROIs", exist_ok=True)
+os.makedirs("PCB_DATASET/output", exist_ok=True)
+
+# ===========================
+# UPLOAD CSV FILE
+# ===========================
+print("Upload your label CSV file")
+uploaded_csv = files.upload()
+for fname in uploaded_csv.keys():
+    os.rename(fname, "PCB_DATASET/label.csv")
+
+CSV_PATH = "PCB_DATASET/label.csv"
+OUT_DIR = "PCB_DATASET/output"
+
+# ===========================
+# UPLOAD ZIP OF ROI IMAGES
+# ===========================
+print("Upload ZIP file of all ROI images")
+uploaded_zip = files.upload()
+for fname in uploaded_zip.keys():
+    zip_path = fname
+
+# Unzip into ROIs folder
+with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+    zip_ref.extractall("PCB_DATASET/ROIs")
+
+# Fix extra nested ROIs folder automatically
+nested_folder = os.path.join("PCB_DATASET/ROIs", "ROIs")
+if os.path.exists(nested_folder):
+    for f in os.listdir(nested_folder):
+        os.rename(os.path.join(nested_folder, f), os.path.join("PCB_DATASET/ROIs", f))
+    os.rmdir(nested_folder)
+
+ROIS_ROOT = "PCB_DATASET/ROIs"
+
+# ===========================
+# FIX CSV PATHS AUTOMATICALLY
+# ===========================
+df = pd.read_csv(CSV_PATH)
+df['image_name'] = df['image_name'].str.replace("\\", "/", regex=False).str.strip()
+
+# Map lowercase filenames to actual paths
+file_map = {}
+for dirpath, dirnames, filenames in os.walk(ROIS_ROOT):
+    for f in filenames:
+        file_map[f.lower()] = os.path.join(dirpath, f)
+
+def map_path(fname):
+    fname_clean = fname.replace("\\","/").strip()
+    return file_map.get(os.path.basename(fname_clean).lower(), None)
+
+df['image_path'] = df['image_name'].apply(map_path)
+df = df[df['image_path'].notnull()].reset_index(drop=True)
+df.to_csv(CSV_PATH, index=False)
+
+print("Sample image paths after fixing:")
+print(df[['image_name','image_path']].head(5))
+
+# ===========================
+# DATASET CLASS
+# ===========================
+class PCBRoiDataset(Dataset):
+    def __init__(self, csv_file, transform=None):
+        self.df = pd.read_csv(csv_file)
         self.transform = transform
-        self.classes = sorted(self.data['label'].unique())
-        self.class_to_idx = {c: i for i, c in enumerate(self.classes)}
+        self.classes = sorted(self.df['label'].unique().tolist())
+        self.class_to_idx = {c:i for i,c in enumerate(self.classes)}
 
     def __len__(self):
-        return len(self.data)
+        return len(self.df)
 
     def __getitem__(self, idx):
-        img_path = os.path.join(self.root_dir, self.data.iloc[idx, 0])
-        label = self.class_to_idx[self.data.iloc[idx, 1]]
-        image = Image.open(img_path).convert("RGB")
+        row = self.df.iloc[idx]
+        img_path = row['image_path']
+        label_name = row['label']
+        image = Image.open(img_path).convert('RGB')
         if self.transform:
             image = self.transform(image)
+        label = self.class_to_idx[label_name]
         return image, label
 
-# =========================
-# Mixup
-# =========================
-def mixup_data(x, y, alpha=0.4):
-    '''Returns mixed inputs, pairs of targets, and lambda'''
-    if alpha > 0:
-        lam = np.random.beta(alpha, alpha)
-    else:
-        lam = 1
-    batch_size = x.size()[0]
-    index = torch.randperm(batch_size).to(x.device)
+# ===========================
+# TRAINING FUNCTION
+# ===========================
+def train_model(CSV_PATH, OUT_DIR, num_epochs=50, batch_size=8):
+    os.makedirs(OUT_DIR, exist_ok=True)
+    df = pd.read_csv(CSV_PATH)
+    train_df, val_df = train_test_split(df, test_size=0.2, stratify=df['label'], random_state=42)
+    train_csv = os.path.join(OUT_DIR, "train_labels.csv")
+    val_csv = os.path.join(OUT_DIR, "val_labels.csv")
+    train_df.to_csv(train_csv, index=False)
+    val_df.to_csv(val_csv, index=False)
 
-    mixed_x = lam * x + (1 - lam) * x[index, :]
-    y_a, y_b = y, y[index]
-    return mixed_x, y_a, y_b, lam
+    print("Train size:", len(train_df), "Val size:", len(val_df))
 
-def mixup_criterion(criterion, pred, y_a, y_b, lam):
-    return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
+    train_transform = transforms.Compose([
+        transforms.Resize((128,128)),
+        transforms.RandomHorizontalFlip(),
+        transforms.RandomRotation(10),
+        transforms.ToTensor(),
+        transforms.Normalize([0.5,0.5,0.5],[0.5,0.5,0.5])
+    ])
+    val_transform = transforms.Compose([
+        transforms.Resize((128,128)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.5,0.5,0.5],[0.5,0.5,0.5])
+    ])
 
-# =========================
-# Model
-# =========================
-def build_model(num_classes):
-    model = EfficientNet.from_pretrained("efficientnet-b4")
-    in_features = model._fc.in_features
-    model._fc = nn.Sequential(
-        nn.Dropout(p=0.4),   # stronger dropout
-        nn.Linear(in_features, num_classes)
-    )
-    return model
+    train_dataset = PCBRoiDataset(train_csv, transform=train_transform)
+    val_dataset = PCBRoiDataset(val_csv, transform=val_transform)
 
-# =========================
-# Training
-# =========================
-def train_model(model, train_loader, val_loader, criterion, optimizer, scheduler, device, num_epochs=40, patience=7):
-    best_acc = 0.0
-    train_losses, val_losses, val_accs = [], [], []
-    patience_counter = 0
+    # Weighted sampler
+    train_labels = [train_dataset.class_to_idx[row['label']] for _, row in train_dataset.df.iterrows()]
+    counts = Counter(train_labels)
+    class_weights = {cls: 1.0/counts[cls] for cls in counts}
+    sample_weights = [class_weights[l] for l in train_labels]
+    sampler = WeightedRandomSampler(weights=sample_weights, num_samples=len(sample_weights), replacement=True)
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, sampler=sampler, num_workers=2)
+    val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print("Device:", device)
+
+    num_classes = len(train_dataset.classes)
+    model = models.efficientnet_b4(weights=models.EfficientNet_B4_Weights.IMAGENET1K_V1)
+    model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
+    model = model.to(device)
+
+    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+    optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
+    scheduler = CosineAnnealingLR(optimizer, T_max=30)
+    scaler = GradScaler('cuda' if torch.cuda.is_available() else None)
+
+    best_val_acc = 0.0
+    patience, patience_counter = 5, 0
+    save_path = os.path.join(OUT_DIR, "efficientnet_b4_best.pth")
 
     for epoch in range(num_epochs):
-        # ---- Train ----
         model.train()
         running_loss, correct, total = 0.0, 0, 0
-        for inputs, labels in train_loader:
-            inputs, labels = inputs.to(device), labels.to(device)
+        t0 = time.time()
 
-            # Mixup
-            inputs, targets_a, targets_b, lam = mixup_data(inputs, labels)
+        for imgs, labels in train_loader:
+            imgs, labels = imgs.to(device), labels.to(device)
             optimizer.zero_grad()
-            outputs = model(inputs)
-            loss = mixup_criterion(criterion, outputs, targets_a, targets_b, lam)
+            with autocast(device_type='cuda' if torch.cuda.is_available() else 'cpu'):
+                outputs = model(imgs)
+                loss = criterion(outputs, labels)
+            scaler.scale(loss).backward()
+            scaler.step(optimizer)
+            scaler.update()
 
-            loss.backward()
-            optimizer.step()
-
-            running_loss += loss.item() * inputs.size(0)
-            _, preds = torch.max(outputs, 1)
-            correct += (lam * preds.eq(targets_a).sum().item() +
-                        (1 - lam) * preds.eq(targets_b).sum().item())
+            running_loss += loss.item() * imgs.size(0)
+            _, preds = outputs.max(1)
+            correct += (preds == labels).sum().item()
             total += labels.size(0)
 
-        epoch_loss = running_loss / len(train_loader.dataset)
-        epoch_acc = correct / total
+        train_loss = running_loss / total
+        train_acc = correct / total
 
-        # ---- Validation ----
+        # Validation
         model.eval()
-        val_loss, val_correct, val_total = 0.0, 0, 0
+        v_correct, v_total = 0, 0
         with torch.no_grad():
-            for inputs, labels in val_loader:
-                inputs, labels = inputs.to(device), labels.to(device)
-                outputs = model(inputs)
-                loss = criterion(outputs, labels)
-                val_loss += loss.item() * inputs.size(0)
-                _, preds = torch.max(outputs, 1)
-                val_correct += (preds == labels).sum().item()
-                val_total += labels.size(0)
-
-        val_loss /= len(val_loader.dataset)
-        val_acc = val_correct / val_total
-
-        # Logging
-        train_losses.append(epoch_loss)
-        val_losses.append(val_loss)
-        val_accs.append(val_acc)
-        print(f"Epoch [{epoch+1}/{num_epochs}], Train Loss: {epoch_loss:.4f}, "
-              f"Val Loss: {val_loss:.4f}, Accuracy: {val_acc*100:.2f}%")
-
-        # Scheduler
+            for imgs, labels in val_loader:
+                imgs, labels = imgs.to(device), labels.to(device)
+                with autocast(device_type='cuda' if torch.cuda.is_available() else 'cpu'):
+                    outputs = model(imgs)
+                _, preds = outputs.max(1)
+                v_correct += (preds == labels).sum().item()
+                v_total += labels.size(0)
+        val_acc = v_correct / v_total
         scheduler.step()
 
-        # Early Stopping
-        if val_acc > best_acc:
-            best_acc = val_acc
+        print(f"Epoch {epoch+1}/{num_epochs} | train_loss {train_loss:.4f} train_acc {train_acc:.3f} val_acc {val_acc:.3f} time {(time.time()-t0):.1f}s")
+
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
             patience_counter = 0
-            torch.save(model.state_dict(), "best_model.pth")
+            torch.save({
+                'epoch': epoch+1,
+                'model_state_dict': model.state_dict(),
+                'optimizer_state_dict': optimizer.state_dict(),
+                'class_to_idx': train_dataset.class_to_idx,
+                'classes': train_dataset.classes
+            }, save_path)
+            print(" ✅ Saved new best:", save_path)
         else:
             patience_counter += 1
             if patience_counter >= patience:
-                print("Early stopping triggered")
+                print("⏹ Early stopping triggered!")
                 break
 
-    return train_losses, val_losses, val_accs, best_acc
+    print("Training finished. Best val acc:", best_val_acc)
+    return model, save_path, val_transform
 
-# =========================
-# Main
-# =========================
-if __name__ == "__main__":
-    csv_file = r"C:\Users\Dell\Downloads\PCB_DATASET\PCB_DATASET\labels1.csv"
-    img_dir = r"C:\Users\Dell\Downloads\PCB_DATASET\PCB_DATASET\roi_images1"
-    save_dir = r"C:\Users\Dell\Downloads\PCB_DATASET\PCB_DATASET\results"
-    os.makedirs(save_dir, exist_ok=True)
-
-    # Transforms
-    transform_train = transforms.Compose([
-        transforms.Resize((128, 128)),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2),
-        transforms.RandomRotation(15),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406],
-                             [0.229, 0.224, 0.225])
-    ])
-    transform_val = transforms.Compose([
-        transforms.Resize((128, 128)),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406],
-                             [0.229, 0.224, 0.225])
-    ])
-
-    # Datasets
-    dataset = PCB_Dataset(csv_file, img_dir, transform=transform_train)
-    num_classes = len(dataset.classes)
-    val_split = 0.2
-    val_size = int(val_split * len(dataset))
-    train_size = len(dataset) - val_size
-    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
-    val_dataset.dataset.transform = transform_val
-
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=2)
-    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=2)
-
-    # Device
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    # Model
-    model = build_model(num_classes).to(device)
-
-    # Loss + Optimizer + Scheduler
-    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
-    optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
-    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=10)
-
-    # Train
-    train_losses, val_losses, val_accs, best_acc = train_model(
-        model, train_loader, val_loader, criterion, optimizer, scheduler, device
-    )
-
-    print(f"Best Accuracy: {best_acc*100:.2f}%")
-
-    # Plot curves
-    plt.figure()
-    plt.plot(train_losses, label="Train Loss")
-    plt.plot(val_losses, label="Val Loss")
-    plt.legend(); plt.title("Loss Curve"); plt.savefig(os.path.join(save_dir, "loss_curve.png"))
-
-    plt.figure()
-    plt.plot(val_accs, label="Val Accuracy")
-    plt.legend(); plt.title("Accuracy Curve"); plt.savefig(os.path.join(save_dir, "accuracy_curve.png"))
-
-    # Confusion Matrix on validation set
-    model.load_state_dict(torch.load("best_model.pth"))
+# ===========================
+# TEST SINGLE IMAGE
+# ===========================
+def test_roi_image(roi_path, model, class_names, transform, device):
+    img = Image.open(roi_path).convert("RGB")
+    img_tensor = transform(img).unsqueeze(0).to(device)
     model.eval()
-    all_preds, all_labels = [], []
     with torch.no_grad():
-        for inputs, labels in val_loader:
-            inputs, labels = inputs.to(device), labels.to(device)
-            outputs = model(inputs)
-            _, preds = torch.max(outputs, 1)
-            all_preds.extend(preds.cpu().numpy())
-            all_labels.extend(labels.cpu().numpy())
+        output = model(img_tensor)
+        probs = torch.softmax(output, dim=1).cpu().numpy()[0]
+        top3_idx = probs.argsort()[-3:][::-1]
+    top3 = [(class_names[i], float(probs[i])) for i in top3_idx]
+    label, conf = top3[0]
+    plt.imshow(img)
+    plt.axis("off")
+    plt.title(f"Predicted: {label} ({conf:.2f})")
+    plt.show()
+    return label, conf, top3
 
-    cm = confusion_matrix(all_labels, all_preds)
-    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=dataset.classes)
-    disp.plot(cmap=plt.cm.Blues)
-    plt.savefig(os.path.join(save_dir, "confusion_matrix.png"))
+# ===========================
+# RUN TRAINING
+# ===========================
+model, save_path, val_transform = train_model(CSV_PATH, OUT_DIR, num_epochs=50, batch_size=8)
+
+# ===========================
+# TEST A SINGLE IMAGE
+# ===========================
+print("Upload a single ROI image to test")
+uploaded_test = files.upload()
+for fname in uploaded_test.keys():
+    roi_path = fname
+
+checkpoint = torch.load(save_path, map_location=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+classes = checkpoint['classes']
+model.load_state_dict(checkpoint['model_state_dict'])
+label, conf, top3 = test_roi_image(roi_path, model, classes, val_transform, torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+print("✅ Final Prediction:", label, conf)
+print("Top-3 Predictions:", top3)

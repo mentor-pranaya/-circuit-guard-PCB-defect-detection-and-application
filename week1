@@ -8,3 +8,8 @@ Aug 25th:Went through what is ROI and the contour detection.Why do we need them 
 AUG 26th:Done Working on with ROI.
 AUG 27th:Started working on with the Contour.
 AUG 28th:Done applying contour and ROI to the defected images.
+SEP 1st:Went through the Efficientnet.
+SEP 2nd:Went through Efficientnet architecture(B4) and why efficientnet 
+SEP 3rd:Complete the work on contour detection and ROI.
+SEP 4th:Got clarified about efficientnet and started working on that using pytorch.
+SEP 5th:Working on efficientnet model traning.

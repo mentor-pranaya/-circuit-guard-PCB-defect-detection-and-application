@@ -50,7 +50,7 @@ for defect_type in os.listdir(images_folder):
         # Threshold for binary defect highlighting
         _, binary = cv2.threshold(subtracted, 30, 255, cv2.THRESH_BINARY)
 
-        # Save result using the SAME name as defected image (pcb + defect type + index)
+        # Save result using the SAME name as defected image
         save_path = os.path.join(defect_sub_folder, img_name)
         cv2.imwrite(save_path, binary)
 

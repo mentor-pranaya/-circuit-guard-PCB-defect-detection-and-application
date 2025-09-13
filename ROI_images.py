@@ -4,45 +4,57 @@ import os
 # Base dataset folder
 base_folder = r"C:\Users\Dell\Downloads\PCB_DATASET\PCB_DATASET"
 
-# Input: subtracted images folder
-subtracted_folder = os.path.join(base_folder, "subtracted_images")
+# Input folders
+images_folder = os.path.join(base_folder, "images")              # defected images
+subtracted_folder = os.path.join(base_folder, "subtracted_images") # binary masks
 
-# Output: ROI folder
-roi_folder = os.path.join(base_folder, "roi_images")
+# Output folder (structured by defect type)
+roi_folder = os.path.join(base_folder, "ROIs")
 os.makedirs(roi_folder, exist_ok=True)
 
-# Loop through defect types inside subtracted images
+# Loop over defect type folders
 for defect_type in os.listdir(subtracted_folder):
-    defect_path = os.path.join(subtracted_folder, defect_type)
-    if not os.path.isdir(defect_path):
+    defect_mask_path = os.path.join(subtracted_folder, defect_type)
+    defect_img_path = os.path.join(images_folder, defect_type)
+
+    if not os.path.isdir(defect_mask_path):
         continue
 
-    # Create corresponding ROI folder
-    defect_roi_folder = os.path.join(roi_folder, defect_type)
-    os.makedirs(defect_roi_folder, exist_ok=True)
+    # Create ROI folder for this defect type (class folder)
+    roi_sub_folder = os.path.join(roi_folder, defect_type)
+    os.makedirs(roi_sub_folder, exist_ok=True)
 
-    # Loop over subtracted images
-    for img_name in os.listdir(defect_path):
-        img_path = os.path.join(defect_path, img_name)
+    # Loop over mask images
+    for img_name in os.listdir(defect_mask_path):
+        mask_path = os.path.join(defect_mask_path, img_name)
+        orig_path = os.path.join(defect_img_path, img_name)
 
-        # Load binary subtracted image
-        img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
-        if img is None:
+        # Load mask (binary) and original image (color)
+        mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+        orig_img = cv2.imread(orig_path)
+
+        if mask is None or orig_img is None:
             continue
 
         # Find contours (defect regions)
-        contours, _ = cv2.findContours(img, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-        # Save each defect ROI separately
-        for i, cnt in enumerate(contours):
+        roi_count = 0
+        for cnt in contours:
             x, y, w, h = cv2.boundingRect(cnt)
 
-            # Extract ROI
-            roi = img[y:y+h, x:x+w]
+            # Filter very small boxes (noise)
+            if w < 10 or h < 10:
+                continue
 
-            # Save with ROI index in filename
-            roi_name = f"{os.path.splitext(img_name)[0]}_roi{i}.jpg"
-            roi_path = os.path.join(defect_roi_folder, roi_name)
-            cv2.imwrite(roi_path, roi)
+            # Crop ROI from original image
+            roi = orig_img[y:y+h, x:x+w]
 
-print("✅ ROI images saved in:", roi_folder)
+            # Save ROI under correct defect class folder
+            roi_filename = f"{os.path.splitext(img_name)[0]}_roi{roi_count}.png"
+            roi_save_path = os.path.join(roi_sub_folder, roi_filename)
+            cv2.imwrite(roi_save_path, roi)
+
+            roi_count += 1
+
+print("✅ ROI extraction completed", roi_folder)

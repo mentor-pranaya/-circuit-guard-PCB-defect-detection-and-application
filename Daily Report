@@ -1,0 +1,83 @@
+Week 1 – 18 August 2025
+
+Downloaded the dataset.
+
+Reviewed the annotation files.
+
+Set up the development environment in VS Code.
+
+Week 1 – 19 August 2025
+
+Analyzed the dataset for better understanding.
+
+Started preprocessing the images.
+
+Week 1 – 20 August 2025
+
+Cleaned the dataset thoroughly.
+
+Studied image subtraction techniques.
+
+Week 1 – 21 August 2025
+
+Compared a used PCB with one having a missing hole to identify defects.
+
+Week 1 – 22 August 2025
+
+Applied image subtraction across all dataset images.
+
+Week 1 – 23 August 2025
+
+Processed each defective PCB using the subtraction method.
+
+Week 2 – 25 August 2025
+
+Researched concepts of Region of Interest (ROI) and contour detection.
+
+Week 2 – 26 August 2025
+
+Implemented the ROI portion of the process.
+
+Week 2 – 27 August 2025
+
+Completed the ROI implementation.
+
+Began working on contour detection.
+
+Week 2 – 28 August 2025
+
+Finished both ROI and contour detection tasks.
+
+Week 3 – 1 September 2025
+
+Studied EfficientNet for model development.
+
+Week 3 – 2 September 2025
+
+Learned about the architecture of EfficientNet.
+
+Week 3 – 3 September 2025
+
+Explored EfficientNet B4 model structure.
+
+Week 3 – 4 September 2025
+
+Implemented cropping techniques for the ROI.
+
+Week 3 – 5 September 2025
+
+Started building the EfficientNet model using PyTorch.
+
+Prepared the CSV file for training data.
+
+Week 4 – 8 September 2025
+
+Completed building the EfficientNet model.
+
+Week 4 – 9 September 2025
+
+Initiated model training.
+
+Week 4 – 10 September 2025
+
+Continued training the model.

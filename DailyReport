@@ -1,21 +1,27 @@
+WEEK-1
 AUG 18th:Downloaded the dataset.Analysed and went through the dataset and also went through the folder in it.Made a setup in the vscode.
 AUG 19th:Checked whether the given dataset is cleaned.Went through the question asked in the session.
 AUG 20th:Cleared that data is clean and can go through the next step.The next step follows with the subtraction process.Explored about what is image subtraction.
 AUG 21th:Tried applying the image subtraction for one image and checked is it working properly or not.Here i am comparing the defected pcb(Missing hole) with the pcb used to identify where the defect is in the pcb.This worked will process with complete dataset.
 AUG 22nd:Tried applying the image subtraction process for all the images in the dataset.
 AUG 23rd:Done applying image subtraction process to the dataset and saved all subtracted images in one folder. 
+WEEK-2
 Aug 25th:Went through what is ROI and the contour detection.Why do we need them after image subtraction?Is it necessary?Does really the image needs both the ROI and contour detection?Our project comes under which ML process?If yes why?
 AUG 26th:Done Working on with ROI.
 AUG 27th:Started working on with the Contour.
 AUG 28th:Done applying contour and ROI to the defected images.
+WEEK-3
 SEP 1st:Went through the Efficientnet.
 SEP 2nd:Went through Efficientnet architecture(B4) and why efficientnet 
 SEP 3rd:Complete the work on contour detection and ROI.
 SEP 4th:Got clarified about efficientnet and started working on that using pytorch.
 SEP 5th:Working on efficientnet model traning.
+WEEK-4
 SEP 8th:Working on model traning to raise the accuracy.
 SEP 9th:Accuracy was struck at 75% trying to improve.
 SEP 10th:Recahed accuracy to 85% making it to best.
 SEP 11th:Reached till 92% adjusting the parameters to improve the accuracy.
 SEP 12th:Started working on testing.
 SEP 13th:Done working with testing part.
+WEEK-5
+SEP 15th:

@@ -1,144 +1,177 @@
-AI-CircuitGuard – PCB Defect Detection
+# AI-CircuitGuard – PCB Defect Detection
 
-This project implements an end-to-end PCB defect detection pipeline in
-three milestones:
-1. Preprocessing & Subtraction
-2. ROI Extraction & Dataset Preparation
-3. EfficientNet Training & Evaluation
+## Milestone 1: Preprocessing & Subtraction
 
-------------------------------------------------------------------------
+In Milestone 1, the main goal is to to prepare the dataset, separate template and test images, align them, apply image subtraction with Otsu’s thresholding, and finally visualize the detected defects. 
 
-📌 Milestone 1: Preprocessing & Subtraction
+The dataset contains four main folders:  
+1. Annotations/ – XML files describing the bounding boxes of defects for six classes (Missing_hole, Mouse_bite, Open_circuit, Short, Spur, Spurious_copper).  
+2. images/ – the defective PCB images divided per defect type.  
+3. PCB_USED/ – contains 10 defect-free template PCB images.  
+4. rotation/ – contains augmented rotated images and rotation angle text files.  
 
-Goal
+---
 
--   Prepare dataset
--   Separate template and test images
--   Align them
--   Apply image subtraction with Otsu’s thresholding
--   Visualize defects
+### Step 1: Template and Test Separation  
+- Defect-free images in PCB_USED/ are used as templates, and defective images in images/ are used as test samples.  
+- Run the script:  
+  ```bash
+  python milestone1/generate_template_test_pairs.py
+  ```
+- Outputs:  
+  - outputs_pairs/templates/ → template images  
+  - outputs_pairs/tests/ → test images  
+  - pairs_mapping.csv → mapping of templates to tests  
 
-Dataset Structure
+---
 
-    Annotations/          # XML defect labels (6 classes)
-    images/               # Defective PCB images
-    PCB_USED/             # Template defect-free images
-    rotation/             # Augmented rotated images
+### Step 2: Alignment  
+- Templates and test images are aligned to match pixel-to-pixel before subtraction.  
+- Even small shifts or rotations between template and test PCB images can produce false differences.  
+- Run the script:  
+  ```bash
+  python milestone1/align_pairs.py
+  ```
+- Output: outputs_aligned/ containing aligned template–test pairs.  
 
-Steps
+---
 
-1.  Template/Test Separation
+### Step 3: Subtraction with Otsu Thresholding  
+- Subtract aligned template and test images → obtain grayscale difference image.  
+- Apply Otsu’s thresholding → convert difference into a binary defect mask.  
+- Apply morphological filtering → remove noise and highlight only true defect regions.  
+- Run the script:  
+  ```bash
+  python milestone1/subtraction_pipeline.py
+  ```
+- Outputs:  
+  - outputs_subtraction/diffs/ → difference images  
+  - outputs_subtraction/masks/ → binary masks  
 
-    python milestone1/generate_template_test_pairs.py
+---
 
-Output → outputs_pairs/templates, outputs_pairs/tests, pairs_mapping.csv
+### Overall Workflow  
+Dataset → Separation → Alignment → Subtraction (Otsu) 
 
-2.  Alignment
+---
 
-    python milestone1/align_pairs.py
+### Deliverables  
+- Scripts:  
+  - generate_template_test_pairs.py  
+  - align_pairs.py  
+  - subtraction_pipeline.py  
+  - visualize_results.py  
+- Outputs:  
+  - outputs_pairs/  
+  - outputs_aligned/  
+  - outputs_subtraction/  
+  - outputs_visualizations/  
+- Report:  
+  - README.md  
 
-Output → outputs_aligned/
+---
 
-3.  Subtraction with Otsu Thresholding
+### Summary  
+Milestone 1 focuses entirely on preprocessing and defect isolation using classical image processing techniques (alignment, subtraction, thresholding) and does not yet involve training a deep learning model.  
 
-    python milestone1/subtraction_pipeline.py
+This ensures that:  
+- The dataset is clean,  
+- The defect regions are correctly isolated,  
+- The workflow for PCB defect detection is properly set up.  
 
-Output → outputs_subtraction/diffs, outputs_subtraction/masks
 
-Deliverables
+## Module 2: ROI Extraction
 
--   Subtracted defect masks
--   Contour visualizations
+### Tasks
+- Use OpenCV to detect contours of defects.  
+- Extract bounding boxes and crop individual defect regions (ROIs).  
+- Label defect ROIs for model training.  
 
-------------------------------------------------------------------------
+### Outputs
+- Bounding box previews with defect labels → `outputs_module2/bbox/`  
+- Cropped ROI images → `outputs_module2/rois/`  
+- Metadata CSV with ROI filepaths and labels → `outputs_module2/roi_metadata.csv`  
 
-📌 Milestone 2: ROI Extraction & Dataset Preparation
+### Deliverables
+- ROI extraction pipeline (module2_roiextract.py)  
+- Cropped and labeled defect samples  
+- Visualization of defect contours with labels  
 
-Goal
+---
 
--   Detect contours of defects with OpenCV
--   Extract bounding boxes + crop defect ROIs
--   Assign labels from XML annotations
--   Build dataset for training
+## Module 3: Model Training with EfficientNet-B4
 
-ROI Extraction
+### Tasks
+- Implement EfficientNet-B4 using PyTorch.  
+- Preprocess and augment defect images (resize to 128×128).  
+- Train model using Adam optimizer and cross-entropy loss.  
 
-    python milestone1/module2_roiextract.py
+### Training Setup
+- Data prepared from ROI crops → `outputs_module2/processed128/`  
+- Train/Val/Test splits created automatically.  
+- Training script:  
+  ```bash
+  python train_efficientnet_b4.py --data_dir outputs_module2/processed128 --epochs 6 --batch_size 16 --lr 2e-4 --output_dir outputs_training
+  ```
 
-Output →
-- outputs_module2/bbox/ → defect previews with labels on bounding boxes
-- outputs_module2/rois/ → cropped defect regions by class
-- outputs_module2/roi_metadata.csv → ROI → label mapping
+### Outputs
+- Trained models → `efficientnet_b4_best.pth`, `efficientnet_b4_last.pth`  
+- Accuracy & loss plots → `training_acc.png`, `training_loss.png`  
+- Training history CSV → `training_history.csv`  
+- Confusion matrix → `confusion_matrix.png`  
+- Predictions on test set → `prediction_test.csv`  
+- Metrics summary → `metrics_summary.csv`  
 
-Dataset Preparation (128×128)
+### Evaluation
+- Achieved **~99% validation accuracy** and **~98–99% test accuracy**.  
+- Training is stable and repeatable.  
 
-    python milestone1/prepare_dataset.py --input_dir outputs_module2/rois --output_dir outputs_module2/processed128 --img_size 128 --max_per_class 120
+---
 
-Output →
-- processed128/train, processed128/val, processed128/test
+## Module 4: Evaluation and Prediction Testing
 
-Deliverables
+### Tasks  
+- **Test model on unseen images**  
+  - Used `processed128/test/` images (held-out set).  
+  - Model predictions compared against true labels.  
 
--   Labeled ROI crops
--   Bounding-box previews with labels
--   Processed dataset (128×128 size)
+- **Run inference pipeline**  
+  - Implemented in `module4_inference.py`.  
+  - Outputs:  
+    - Annotated test images (class label + confidence written on image).  
+    - `predictions.csv` → file with predictions, ground truth, confidence.  
+    - `metrics_report.txt` → precision, recall, F1, and accuracy per class.  
+    - `confusion_matrix.png` → confusion matrix heatmap.  
 
-------------------------------------------------------------------------
+- **Compare with annotated ground truth**  
+  - Ground truth taken from `roi_metadata.csv`.  
+  - Code: `compare_with_gt.py`.  
+  - Matched predictions with ground-truth labels for accuracy.  
 
-📌 Milestone 3: EfficientNet Training & Evaluation
+---
 
-Goal
+### Deliverables  
+- ✅ Annotated output test images (`outputs_module4/annotated/`)  
+- ✅ Predictions CSV (`outputs_module4/predictions.csv`)  
+- ✅ Final evaluation report with metrics (`outputs_module4/metrics_report.txt`)  
+- ✅ Confusion matrix plot (`outputs_module4/confusion_matrix.png`)  
+- ✅ Comparison with ground truth (`outputs_module4/pred_vs_roi_metadata_merged.csv`)  
 
--   Train an EfficientNet-B4 model with defect dataset
--   Use Adam optimizer + cross-entropy loss
--   Achieve ≥97% test accuracy
+---
 
-Training Command
+### Evaluation Results  
+- **Accuracy on test set:** ~96.2%  
+- **Precision/Recall per class:** >0.92 for all classes  
+- **Low false positive/negative rate:** confirmed by high precision & recall  
+- **Prediction match rate with annotated truth:** ~96.4%  
 
-    python milestone1/train_efficientnet_b4.py --data_dir outputs_module2/processed128 --epochs 6 --batch_size 16 --lr 2e-4 --output_dir outputs_training
+---
 
-Training Outputs
+### Summary  
+Module 4 successfully validates the trained EfficientNet-B4 model on unseen data.  
+The pipeline produces:  
+- Annotated defect images with predictions,  
+- Quantitative evaluation metrics, and  
+- A confusion matrix showing classification performance.  
 
--   efficientnet_b4_best.pth → best model
--   efficientnet_b4_last.pth → last epoch model
--   training_loss.png → training loss curve
--   training_acc.png → training accuracy curve
--   confusion_matrix.png → evaluation confusion matrix
--   metrics_summary.csv → summary of loss/accuracy
--   prediction_test.csv → per-image predictions
-
-Final Performance
-
-✅ Stable & repeatable training
-✅ Accuracy ≥97% on test set
-✅ Clear evaluation plots
-
-------------------------------------------------------------------------
-
-📌 Repository Submission (GitHub)
-
-Include:
-- All scripts (.py)
-- README.md (this file)
-- requirements.txt
-- Outputs (sample images + training plots + model weights)
-
-Exclude:
-- Full raw dataset (too large)
-- All ROI crops (keep only a few samples per class)
-
-------------------------------------------------------------------------
-
-📊 Flowchart
-
-    Dataset → Preprocessing → Subtraction → ROI Extraction → Processed Dataset → Training → Evaluation
-
-------------------------------------------------------------------------
-
-✅ Summary
-
--   Milestone 1 → Subtraction + defect isolation
--   Milestone 2 → ROI extraction + dataset preparation
--   Milestone 3 → Training EfficientNet-B4, accuracy & evaluation plots
-
-This completes the pipeline for PCB defect detection.
+This completes the end-to-end PCB defect detection workflow.  

@@ -1,1 +1,3 @@
-
+- Tested my trained model on new, unseen PCB defect images.  
+- Ran inference to predict defect types in those images.  
+- Compared my model’s predictions with the true labeled data.  

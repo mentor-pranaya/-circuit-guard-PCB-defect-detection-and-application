@@ -1,1 +1,5 @@
-
+- Trained an EfficientNet-B4 model using PyTorch on your PCB defect dataset.
+- Preprocessed and augmented images.
+- Used the Adam optimizer and cross-entropy loss for efficient training.
+- Split your data by CSV into train, validation, and test sets.
+- Saved the best model and tracked accuracy, loss, and confusion matrix plots.

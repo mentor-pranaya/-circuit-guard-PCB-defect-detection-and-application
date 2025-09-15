@@ -31,7 +31,7 @@ set_seed(42)
 # =====================================================
 ROIS_ROOT = r"D:\B-TECH\CERTIFICATES\Infosys Internship\CircuitGuard\data\roi_images"
 LABELS_CSV = r"D:\B-TECH\CERTIFICATES\Infosys Internship\CircuitGuard\data\roi_labels.csv"
-OUT_DIR    = r"D:\B-TECH\CERTIFICATES\Infosys Internship\CircuitGuard\checkpoints"
+OUT_DIR    = r"D:\B-TECH\CERTIFICATES\Infosys Internship\CircuitGuard\results"
 Path(OUT_DIR).mkdir(parents=True, exist_ok=True)
 
 

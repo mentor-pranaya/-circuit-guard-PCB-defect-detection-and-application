@@ -269,6 +269,11 @@ def main():
     plt.show()
 
 
+    torch.save(model.state_dict(), "efficientnet_b4_best.pth")
+
+    from google.colab import files
+    files.download("efficientnet_b4_best.pth")
+
 # Entry point
 if __name__ == "__main__":
     main()

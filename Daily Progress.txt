@@ -97,3 +97,5 @@ Date : 18/09/2025
 
 Completed model training with accuracy 93%
 Starting with testing
+Completed testing
+Starting with UI

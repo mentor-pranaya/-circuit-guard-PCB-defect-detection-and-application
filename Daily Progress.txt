@@ -91,3 +91,9 @@ Training the model...
 Date : 12/09/2025
 
 Completed model training
+
+
+Date : 18/09/2025
+
+Completed model training with accuracy 93%
+Starting with testing

@@ -199,3 +199,4 @@ if ref_file and defect_file:
                 file_name="prediction_log.csv",
                 mime="text/csv"
             )
+

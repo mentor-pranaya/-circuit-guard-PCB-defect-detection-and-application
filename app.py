@@ -163,14 +163,14 @@ if ref_file and defect_file:
     with open(defect_path, "wb") as f:
         f.write(defect_file.getbuffer())
 
-    st.image(ref_path, caption="Reference PCB", use_column_width=True)
-    st.image(defect_path, caption="Defected PCB", use_column_width=True)
+    st.image(ref_path, caption="Reference PCB", use_container_width=True)
+    st.image(defect_path, caption="Defected PCB", use_container_width=True)
 
     if st.button("Run Detection"):
         annotated_img, preds, annotated_save_path = process_images(defect_path, ref_path)
 
         st.subheader("📌 Annotated PCB with Defects")
-        st.image(cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB), use_column_width=True)
+        st.image(cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB), use_container_width=True)
 
         # 🔽 Download button for annotated image
         with open(annotated_save_path, "rb") as f:
@@ -199,4 +199,3 @@ if ref_file and defect_file:
                 file_name="prediction_log.csv",
                 mime="text/csv"
             )
-

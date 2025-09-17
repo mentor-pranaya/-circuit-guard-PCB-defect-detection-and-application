@@ -1,0 +1,173 @@
+📅 Date: 18 Aug 2025
+Work Done Today:
+
+Downloaded and unpacked the PCB dataset.
+
+Inspected annotation XML files, PCB images, and defect types.
+
+IDE used: Visual Studio Code (Primary), Google Colab (Secondary).
+
+📅 Date: 20 Aug 2025
+Progress Update:
+
+Implemented initial preprocessing and data cleaning scripts for PCB defect detection.
+
+Structured dataset to support circuit guard PCB defect analysis.
+
+Developed data normalization steps and handled edge cases.
+
+Designed subtraction-based preprocessing workflow.
+
+📅 Date: 21 Aug 2025
+Milestone Achieved:
+
+Mapped out the full defect detection process using image subtraction.
+
+Planned organized dataset folder structure.
+
+Defined defect categories and considered special cases like Mouse Bite and Missing Hole.
+
+📅 Date: 22 Aug 2025
+Development Focus:
+
+Preprocessed PCB and defective images in grayscale.
+
+Resized images for consistent input dimensions.
+
+Conducted initial tests on subtraction method using sample images.
+
+📅 Date: 23 Aug 2025
+Subtraction Pipeline:
+
+Applied absolute difference operation between reference and defective images.
+
+Generated preliminary binary masks via thresholding.
+
+Noticed challenges such as noise and slight misalignment.
+
+📅 Date: 27 Aug 2025
+Pipeline Refinement:
+
+Incorporated Gaussian blur to reduce noise artifacts.
+
+Tuned threshold parameters to prevent over-highlighting entire images.
+
+Tested across various defect types for robustness.
+
+📅 Date: 28 Aug 2025
+Contour Extraction Initiated:
+
+Extracted defect contours using cv2.findContours.
+
+Filtered out small noise contours.
+
+Started implementing bounding box visualization for detected ROIs.
+
+📅 Date: 29 Aug 2025
+ROI Segmentation Improvements:
+
+Reliable subtraction mechanism achieved.
+
+Updated contour extraction and ROI highlighting logic.
+
+Tested multiple defect categories; fine-tuning parameters in progress.
+
+📅 Date: 01 Sep 2025
+Model Training Kickoff:
+
+Explored EfficientNet-B4 architecture for defect classification.
+
+Initialized EfficientNet-B4 model in PyTorch.
+
+Configured Adam optimizer and CrossEntropyLoss.
+
+Began initial training epochs, observed loss and accuracy trends.
+
+📅 Date: 02 Sep 2025
+Training Progress:
+
+Monitored training and validation accuracy carefully.
+
+Validation accuracy gradually increased toward 97%.
+
+Implemented early stopping to avoid overfitting.
+
+Saved best-performing model checkpoint.
+
+📅 Date: 03 Sep 2025
+Training Completion:
+
+Finalized full model training process.
+
+Validation accuracy reached ~97%.
+
+Stable loss curves achieved → reproducible training.
+
+Saved final model as efficientnet_b4.pth.
+
+📅 Date: 04 Sep 2025
+Inference Pipeline Implementation:
+
+Built inference system to process new ROI images.
+
+Performed successful predictions on test samples.
+
+Generated annotated images displaying predicted defect types.
+
+📅 Date: 05 Sep 2025
+Prediction Evaluation:
+
+Compared predicted labels vs ground truth for test dataset.
+
+Generated evaluation report CSV containing: image filename, predicted class, ground truth, correctness flag.
+
+📅 Date: 08 Sep 2025
+Preparing for Real-World Testing:
+
+Collected fresh PCB images for full pipeline inference.
+
+Verified high-quality, aligned input images.
+
+📅 Date: 09 Sep 2025
+Real-World Inference Execution:
+
+Ran inference pipeline on previously unseen PCB images.
+
+Successfully classified defect types and saved visual results.
+
+📅 Date: 10 Sep 2025
+Results Validation:
+
+Compared inference outputs to manual ground truth.
+
+Calculated accuracy, precision, and recall metrics.
+
+Organized annotated images by predicted class in output folder.
+
+📅 Date: 11 Sep 2025
+Final Testing & Reporting:
+
+Confirmed prediction accuracy consistently ≥97%.
+
+Verified very low false positive and false negative rates.
+
+Visually reviewed annotated images → Results matched expectations.
+
+📅 Date: 12 Sep 2025
+Final Evaluation Report Prep:
+
+Compiled accuracy scores, loss graphs, confusion matrix, and sample annotated images.
+
+Drafted clear steps explaining the inference pipeline for documentation.
+
+📊 Final Classification Report Summary:
+Class	Precision	Recall	F1-Score	Support
+Missing_hole	1.00	0.99	0.99	79
+Mouse_bite	0.99	0.96	0.97	79
+Open_circuit	0.97	0.99	0.98	76
+Short	1.00	0.99	0.99	77
+Spur	0.94	1.00	0.97	75
+Spurious_copper	1.00	0.97	0.99	80
+
+✔️ Overall Accuracy: ~98%
+✔️ Macro Avg / Weighted Avg consistently high.

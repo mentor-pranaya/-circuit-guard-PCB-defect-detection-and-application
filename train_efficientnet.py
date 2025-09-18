@@ -17,46 +17,14 @@ from torch.amp import autocast, GradScaler
 import time
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-from google.colab import files
-import zipfile
 
 # ===========================
-# CREATE FOLDERS
+# PATHS
 # ===========================
-os.makedirs("PCB_DATASET/ROIs", exist_ok=True)
-os.makedirs("PCB_DATASET/output", exist_ok=True)
-
-# ===========================
-# UPLOAD CSV FILE
-# ===========================
-print("Upload your label CSV file")
-uploaded_csv = files.upload()
-for fname in uploaded_csv.keys():
-    os.rename(fname, "PCB_DATASET/label.csv")
-
-CSV_PATH = "PCB_DATASET/label.csv"
-OUT_DIR = "PCB_DATASET/output"
-
-# ===========================
-# UPLOAD ZIP OF ROI IMAGES
-# ===========================
-print("Upload ZIP file of all ROI images")
-uploaded_zip = files.upload()
-for fname in uploaded_zip.keys():
-    zip_path = fname
-
-# Unzip into ROIs folder
-with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-    zip_ref.extractall("PCB_DATASET/ROIs")
-
-# Fix extra nested ROIs folder automatically
-nested_folder = os.path.join("PCB_DATASET/ROIs", "ROIs")
-if os.path.exists(nested_folder):
-    for f in os.listdir(nested_folder):
-        os.rename(os.path.join(nested_folder, f), os.path.join("PCB_DATASET/ROIs", f))
-    os.rmdir(nested_folder)
-
-ROIS_ROOT = "PCB_DATASET/ROIs"
+CSV_PATH = '/content/drive/MyDrive/PCB_DATASET/PCB_DATASET/label_fixed.csv'
+ROIS_ROOT = '/content/drive/MyDrive/PCB_DATASET/PCB_DATASET/ROIs'
+OUT_DIR = '/content/drive/MyDrive/PCB_DATASET/PCB_DATASET/output'
+os.makedirs(OUT_DIR, exist_ok=True)
 
 # ===========================
 # FIX CSV PATHS AUTOMATICALLY
@@ -240,18 +208,14 @@ def test_roi_image(roi_path, model, class_names, transform, device):
     return label, conf, top3
 
 # ===========================
-# RUN TRAINING
+# RUN TRAINING AUTOMATICALLY
 # ===========================
 model, save_path, val_transform = train_model(CSV_PATH, OUT_DIR, num_epochs=50, batch_size=8)
 
 # ===========================
-# TEST A SINGLE IMAGE
+# TEST SINGLE IMAGE EXAMPLE
 # ===========================
-print("Upload a single ROI image to test")
-uploaded_test = files.upload()
-for fname in uploaded_test.keys():
-    roi_path = fname
-
+roi_path = '/content/drive/MyDrive/PCB_DATASET/PCB_DATASET/ROIs/Open_circuit/01_open_circuit_01_roi0.png'
 checkpoint = torch.load(save_path, map_location=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
 classes = checkpoint['classes']
 model.load_state_dict(checkpoint['model_state_dict'])

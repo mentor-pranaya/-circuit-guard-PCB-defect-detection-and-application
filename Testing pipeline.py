@@ -1,5 +1,5 @@
 # ===========================
-# Full Automatic PCB Testing - Clean Final Version
+# Full Automatic PCB Testing - Drive Paths Version
 # ===========================
 !pip install torch torchvision matplotlib pillow opencv-python --quiet
 
@@ -10,13 +10,13 @@ import matplotlib.pyplot as plt
 from google.colab import files
 
 # ===========================
-# FOLDER SETUP
+# FOLDER SETUP (Drive paths)
 # ===========================
-BASE_FOLDER = "PCB_DATASET"
-PCB_USED_PATH = os.path.join(BASE_FOLDER, "PCB_USED")
+BASE_FOLDER = "/content/drive/MyDrive/PCB_DATASET"
+PCB_USED_PATH = MODEL_PATH = "/content/drive/MyDrive/PCB_DATASET/PCB_DATASET/"
 ROI_BASE = os.path.join(BASE_FOLDER, "Pipeline_ROIs")
 SUBTRACTED_SAVE = os.path.join(BASE_FOLDER, "subtracted_images")
-MODEL_PATH = os.path.join(BASE_FOLDER, "output/efficientnet_b4_best.pth")
+MODEL_PATH = "/content/drive/MyDrive/PCB_DATASET/PCB_DATASET/output/efficientnet_b4_best.pth"
 
 os.makedirs(ROI_BASE, exist_ok=True)
 os.makedirs(SUBTRACTED_SAVE, exist_ok=True)

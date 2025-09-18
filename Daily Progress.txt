@@ -93,9 +93,15 @@ Date : 12/09/2025
 Completed model training
 
 
-Date : 18/09/2025
+Date : 16/09/2025
 
 Completed model training with accuracy 93%
 Starting with testing
 Completed testing
 Starting with UI
+
+
+Date : 18/09/2025
+
+Starting to work with UI 
+Gonna use Streamlit

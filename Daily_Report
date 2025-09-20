@@ -1,0 +1,54 @@
+WEEK-1(iMAGE SUBTRACTION)
+Aug 18:
+Downloaded the dataSet.
+Aug 19:
+went through the folder and checked each folder and understand the dataset.
+Made a setup in VS Code.
+Checked whether the dataset is cleaned or not.
+I went through the question asked in the session.
+Aug 20:
+i started learning about what is image subtraction why it is needed to the project.
+Started learning about directories and path implementing.
+Aug 21:
+Started implementing the code for single pcb defect image vs single good image to get the difference of the data.
+Got output clearly with black-background and defects in white dots.
+Aug 22:
+Implemented the whole code and applied all the images in the dataset.
+Compared with all defects.
+Output obtained.
+
+WEEK-2(CONTOUR AND ROI)
+Aug 25th:
+I Went through the Module 2 and learned about what is ROI and the contour detection.
+Why do we need them?
+Is it necessary after subtraction process.
+AUG 26th:
+Started working on Roi
+AUG 27th:
+Started working on with the Contour.
+Aug 28th:
+Done with single subtraction processed image
+Aug 30th:
+Done with ROI and contour and implemented code successfully for all subtraction processed images.
+
+WEEK-3(TRAINING EFFICIENTNET)
+SEP 1st:Went through the Efficientnet.
+SEP 2nd:Went through Efficientnet architecture(B4) and why efficientnet 
+SEP 3rd:Complete the work on contour detection and ROI.
+SEP 4th:Got clarified about efficientnet and started working on that using pytorch.
+SEP 5th:Working on efficientnet model traning.
+
+WEEK-4(TESTING)
+SEP 8th:Working on model traning to raise the accuracy.
+SEP 9th:Accuracy was struck at 75% trying to improve.
+SEP 10th:Recahed accuracy to 85% making it to best.
+SEP 11th:Reached till 92% adjusting the parameters to improve the accuracy.
+SEP 12th:Started working on testing.
+SEP 13th:Done working with testing part.
+
+WEEK-5(WEB UI AND BACKEND INTEGRATION)
+SEP 15TH:Went through UI.
+SEP 16TH:Decided to work on HTML,CSS,JS.
+SEP 17th: Started working on Frontend.
+SEP 18TH: Completed UI part and started backend pipeline using Flash,torch
+SEP 19th: Completed both UI and backend Integration and tested the images with normal one and defected image and got 100% accuracy and detection.

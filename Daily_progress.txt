@@ -27,6 +27,6 @@ Completed and Successfully build a testing Pipeline where image is taken and goe
 Week5:
 Build a basic streamlit frontend where user will upload the reference PCB image(Clean PCB) and the Defected PCB image.
 It goes through the whole pipeline created in previous week(image_subtraction+Roi_extraction+model).
-Output will be the anotated PCB image(The PCB with bounding boxes + labels)
-Added the export button to save the prediction logs to csv 
-
+Output will be the anotated PCB image(The PCB with bounding boxes + labels).
+Added the export button to save the prediction logs to csv. 
+Also Added the Download button to download the annotated images.

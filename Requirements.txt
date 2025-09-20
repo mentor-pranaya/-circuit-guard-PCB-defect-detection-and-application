@@ -3,5 +3,5 @@ Streamlit
 Torch
 Torchvision
 OpenCV-Python
-Pillow
 NumPy
+Pillow

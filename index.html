@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PCB Defect Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>PCB Defect Detection Pipeline</h1>
+            <p>Upload a reference (golden) image and a test image to identify manufacturing defects.</p>
+        </header>
+
+        <main>
+            <div class="upload-grid">
+                <div class="upload-box">
+                    <h3>1. Upload Reference Image</h3>
+                    <input type="file" id="ref-input" accept="image/*">
+                    <label for="ref-input" class="file-label">Choose Golden Image</label>
+                    <img id="ref-preview" class="preview-img" src="#" alt="Reference Preview">
+                </div>
+                <div class="upload-box">
+                    <h3>2. Upload Test Image</h3>
+                    <input type="file" id="test-input" accept="image/*">
+                    <label for="test-input" class="file-label">Choose Test Image</label>
+                    <img id="test-preview" class="preview-img" src="#" alt="Test Preview">
+                </div>
+            </div>
+
+            <button id="detect-btn">🚀 Detect Defects</button>
+
+            <div id="results-section" class="hidden">
+                <h2>Detection Results</h2>
+                <div id="loader" class="hidden"></div>
+                <div id="error-message" class="hidden"></div>
+                <div class="result-content">
+                    <div class="annotated-image-container">
+                        <h3>Annotated Image</h3>
+                        <img id="annotated-image" src="#" alt="Annotated Result">
+                    </div>
+                    <div class="predictions-container">
+                        <h3>Detected Defects</h3>
+                        <ul id="predictions-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

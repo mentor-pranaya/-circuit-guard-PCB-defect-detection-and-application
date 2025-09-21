@@ -196,5 +196,5 @@ train_model(model, train_loader, val_loader, device, epochs=20)
 # ========================================
 model.load_state_dict(torch.load("/content/drive/MyDrive/pcb_model.pth", map_location=device))
 model.eval()
-print(" Model loaded and ready for testing/inference")what will be the output 
+print(" Model loaded and ready for testing/inference")
 

@@ -109,6 +109,6 @@ Gonna use Streamlit
 
 Date : 22/09/2025
 
-Finished UI
+Created simple UI 
 Now heading to work with the backend pipeline
 

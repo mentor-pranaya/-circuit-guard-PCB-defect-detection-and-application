@@ -105,3 +105,10 @@ Date : 18/09/2025
 
 Starting to work with UI 
 Gonna use Streamlit
+
+
+Date : 22/09/2025
+
+Finished UI
+Now heading to work with the backend pipeline
+

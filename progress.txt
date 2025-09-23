@@ -39,6 +39,24 @@ DATE:03-09-2025
 DATE:04-09-2025,05-09-2025
    revise the subtraction part,contour extraction part and ROI part. discuss about the 
    EfficientNet model
+DATE:08-09-2025
+Working on model traning to raise the accuracy.
+
+DATE:09-09-2025
+Accuracy was struck at 75% trying to improve.
+
+DATE:10-09-2025
+Reached accuracy to 85% making it to best.
+
+DATE:11-09-2025
+Reached till 94% adjusting the parameters to improve the accuracy.
+
+DATE:12-09-2025
+Started working on testing.
+
+DATE:13-09-2025
+Done working with testing part
+
 
 
 

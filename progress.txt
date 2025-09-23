@@ -38,8 +38,9 @@ DATE:03-09-2025
   know about the topic of the EfficientNet-B4.
 DATE:04-09-2025,05-09-2025
    revise the subtraction part,contour extraction part and ROI part. discuss about the 
-   EfficientNet model
-DATE:08-09-2025
+   EfficientNet-B4 .
+
+DATE:08-09-2025(4th week)
 Working on model traning to raise the accuracy.
 
 DATE:09-09-2025
@@ -54,8 +55,27 @@ Reached till 94% adjusting the parameters to improve the accuracy.
 DATE:12-09-2025
 Started working on testing.
 
-DATE:13-09-2025
-Done working with testing part
+DATE:15-09-2025(WEEK-5)
+continues the testing part on the dataset.
+
+DATE:16-09-2025
+completes the testing part.
+
+DATE:17-09-2025
+Started to work on frontend.
+
+DATE:18-09-2025
+understand the concept of UI(user interface).
+
+DATE:19-09-2025
+Went through Streamlit library and started coding for UI part.
+
+DATE:20-09-2025
+Done with the UI part and Updated in the github as well.
+
+DATE:22-09-2025(WEEK-6)
+SEP 22nd:Started working on the pipeline to integrate with the UI.
+
 
 
 

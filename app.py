@@ -1,3 +1,4 @@
+
 import os
 import cv2
 import torch
@@ -121,6 +122,9 @@ def predict_roi(roi_path, model, class_names, transform, device):
 # ==========================================
 # 5️⃣ Full Pipeline
 # ==========================================
+# ==========================================
+# 5️⃣ Full Pipeline (Only return predictions, no ROI display)
+# ==========================================
 def process_images(defect_img_path, ref_img_path):
     base_name = os.path.basename(defect_img_path)
     mask_save_path = os.path.join(SUBTRACTED_SAVE, f"{os.path.splitext(base_name)[0]}_mask.png")
@@ -132,11 +136,13 @@ def process_images(defect_img_path, ref_img_path):
 
     predictions = []
     for roi_path, (x1, y1, x2, y2) in roi_results:
-        label, conf, top3 = predict_roi(roi_path, model, classes, transform, device)
-        predictions.append((roi_path, label, conf, top3))
+        label, conf, _ = predict_roi(roi_path, model, classes, transform, device)
+        predictions.append((label, conf))
         cv2.rectangle(annotated_img, (x1, y1), (x2, y2), (0, 0, 255), 2)
+
+        # 🔹 Bigger font size & thickness for defect labels
         cv2.putText(annotated_img, f"{label} ({conf:.2f})", (x1, y1 - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 3)
 
     annotated_save_path = os.path.join(ROI_BASE, f"{os.path.splitext(base_name)[0]}_annotated.png")
     cv2.imwrite(annotated_save_path, annotated_img)
@@ -144,7 +150,7 @@ def process_images(defect_img_path, ref_img_path):
     return annotated_img, predictions, annotated_save_path
 
 # ==========================================
-# 🎛 Streamlit UI
+# 🎛 Streamlit UI (Only annotated image)
 # ==========================================
 st.title("🔍 PCB Defect Detection")
 st.write("Upload a **reference PCB** (golden) and a **defected PCB** to detect issues.")
@@ -174,28 +180,9 @@ if ref_file and defect_file:
 
         # 🔽 Download button for annotated image
         with open(annotated_save_path, "rb") as f:
-            st.download_button("⬇️ Download Annotated Image", f, file_name=os.path.basename(annotated_save_path), mime="image/png")
-
-        st.subheader("📋 ROI Predictions")
-        rows = []
-        for roi_path, label, conf, top3 in preds:
-            st.image(roi_path, caption=f"Pred: {label} ({conf:.2f})", width=200)
-            st.write("Top-3:", top3)
-            rows.append({
-                "ROI File": os.path.basename(roi_path),
-                "Prediction": label,
-                "Confidence": conf,
-                "Top-3": str(top3)
-            })
-
-        # 🔽 Download button for CSV log
-        if rows:
-            df = pd.DataFrame(rows)
-            csv_buffer = io.StringIO()
-            df.to_csv(csv_buffer, index=False)
             st.download_button(
-                "⬇️ Download Prediction Log (CSV)",
-                data=csv_buffer.getvalue(),
-                file_name="prediction_log.csv",
-                mime="text/csv"
+                "⬇️ Download Annotated Image",
+                f,
+                file_name=os.path.basename(annotated_save_path),
+                mime="image/png"
             )

@@ -112,3 +112,8 @@ Date : 22/09/2025
 Created simple UI 
 Now heading to work with the backend pipeline
 
+
+
+Date : 24/09/2025
+
+Currently working with backend pipeline

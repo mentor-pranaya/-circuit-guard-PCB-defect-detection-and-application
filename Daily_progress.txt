@@ -30,3 +30,7 @@ It goes through the whole pipeline created in previous week(image_subtraction+Ro
 Output will be the anotated PCB image(The PCB with bounding boxes + labels).
 Added the export button to save the prediction logs to csv. 
 Also Added the Download button to download the annotated images.
+
+Week6:
+Started Integrating the Backend with the Frontend.
+Successfully integrated the backend and frontend and the whole pipeline is working smoothly.

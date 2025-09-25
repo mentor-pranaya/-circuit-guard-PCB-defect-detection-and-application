@@ -24,19 +24,16 @@ os.makedirs(SUBTRACTED_SAVE, exist_ok=True)
 # ==========================================
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Load checkpoint
 checkpoint = torch.load(MODEL_PATH, map_location=device)
 classes = checkpoint['classes']
 num_classes = len(classes)
 
-# Load EfficientNet-B4 model
 model = models.efficientnet_b4(pretrained=False)
 model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
 model.load_state_dict(checkpoint['model_state_dict'])
 model = model.to(device)
 model.eval()
 
-# Image transformation for prediction
 transform = transforms.Compose([
     transforms.Resize((128,128)),
     transforms.ToTensor(),
@@ -47,7 +44,6 @@ transform = transforms.Compose([
 # 2️⃣ Image Subtraction Function
 # ==========================================
 def subtract_images(defect_img_path, ref_img_path, save_mask_path=None):
-    """Subtract reference PCB from defected PCB to highlight defects"""
     defect_gray = cv2.imread(defect_img_path, cv2.IMREAD_GRAYSCALE)
     defect_color = cv2.imread(defect_img_path)
     ref_gray = cv2.imread(ref_img_path, cv2.IMREAD_GRAYSCALE)
@@ -57,29 +53,23 @@ def subtract_images(defect_img_path, ref_img_path, save_mask_path=None):
     if ref_gray is None:
         raise ValueError(f"❌ Could not load reference image: {ref_img_path}")
 
-    # Resize reference to match defect
     if ref_gray.shape != defect_gray.shape:
         ref_gray = cv2.resize(ref_gray, (defect_gray.shape[1], defect_gray.shape[0]))
 
-    # Apply Gaussian blur to reduce noise
     defect_blur = cv2.GaussianBlur(defect_gray, (5,5), 0)
     ref_blur = cv2.GaussianBlur(ref_gray, (5,5), 0)
 
-    # Subtract images
     subtracted = cv2.absdiff(defect_blur, ref_blur)
 
-    # Adaptive threshold to create binary mask
     binary = cv2.adaptiveThreshold(subtracted, 255,
                                    cv2.ADAPTIVE_THRESH_MEAN_C,
                                    cv2.THRESH_BINARY, 35, -5)
 
-    # Morphological operations to clean mask
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5,5))
     cleaned = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel, iterations=1)
     cleaned = cv2.morphologyEx(cleaned, cv2.MORPH_CLOSE, kernel, iterations=1)
     cleaned = cv2.dilate(cleaned, kernel, iterations=2)
 
-    # Save mask if path provided
     if save_mask_path:
         cv2.imwrite(save_mask_path, cleaned)
 
@@ -90,7 +80,6 @@ def subtract_images(defect_img_path, ref_img_path, save_mask_path=None):
 # ==========================================
 def extract_rois_and_save(orig_img, mask, save_base_folder, base_name,
                           min_area=200, min_w=10, min_h=10):
-    """Extract defect regions (ROIs) from the mask and save them"""
     os.makedirs(save_base_folder, exist_ok=True)
     contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
@@ -115,24 +104,22 @@ def extract_rois_and_save(orig_img, mask, save_base_folder, base_name,
 # 4️⃣ Prediction Function
 # ==========================================
 def predict_roi(roi_path, model, class_names, transform, device):
-    """Predict defect type for a single ROI"""
     img = Image.open(roi_path).convert("RGB")
     img_tensor = transform(img).unsqueeze(0).to(device)
 
     with torch.no_grad():
         output = model(img_tensor)
         probs = torch.softmax(output, dim=1).cpu().numpy()[0]
-        top3_idx = probs.argsort()[-3:][::-1]
+        top_idx = probs.argmax()
 
-    top3 = [(class_names[i], float(probs[i])) for i in top3_idx]
-    label, conf = top3[0]
-    return label, conf, top3
+    label = class_names[top_idx]
+    conf = float(probs[top_idx])
+    return label, conf
 
 # ==========================================
 # 5️⃣ Full Pipeline
 # ==========================================
 def process_images(defect_img_path, ref_img_path):
-    """Full pipeline: subtract, extract ROIs, predict, annotate"""
     base_name = os.path.basename(defect_img_path)
     mask_save_path = os.path.join(SUBTRACTED_SAVE, f"{os.path.splitext(base_name)[0]}_mask.png")
 
@@ -141,25 +128,33 @@ def process_images(defect_img_path, ref_img_path):
     roi_results = extract_rois_and_save(defect_color, mask, ROI_BASE, base_name)
     annotated_img = defect_color.copy()
 
-    predictions = []
     for roi_path, (x1, y1, x2, y2) in roi_results:
-        label, conf, top3 = predict_roi(roi_path, model, classes, transform, device)
-        predictions.append((roi_path, label, conf, top3))
-        cv2.rectangle(annotated_img, (x1, y1), (x2, y2), (0, 0, 255), 2)
-        cv2.putText(annotated_img, f"{label} ({conf:.2f})", (x1, y1 - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+        label, conf = predict_roi(roi_path, model, classes, transform, device)
+
+        # Rectangle
+        cv2.rectangle(annotated_img, (x1, y1), (x2, y2), (0, 0, 255), 3)
+
+        # 🔹 Clearer labels (bold yellow text on black background)
+        text = f"{label} ({conf:.2f})"
+        font_scale = 1.2
+        font_thickness = 3
+        font = cv2.FONT_HERSHEY_SIMPLEX
+
+        (tw, th), baseline = cv2.getTextSize(text, font, font_scale, font_thickness)
+        cv2.rectangle(annotated_img, (x1, y1 - th - baseline - 5), (x1 + tw, y1), (0, 0, 0), -1)
+        cv2.putText(annotated_img, text, (x1, y1 - 7),
+                    font, font_scale, (0, 255, 255), font_thickness, cv2.LINE_AA)
 
     annotated_save_path = os.path.join(ROI_BASE, f"{os.path.splitext(base_name)[0]}_annotated.png")
     cv2.imwrite(annotated_save_path, annotated_img)
 
-    return annotated_img, predictions, annotated_save_path
+    return annotated_img, annotated_save_path
 
 # ==========================================
 # 🎛 Streamlit UI
 # ==========================================
 st.set_page_config(page_title="PCB Defect Detection", layout="wide")
 
-# 🔹 CSS Styling
 page_bg = """
 <style>
 [data-testid="stAppViewContainer"] { background-color: #f0f8ff; }
@@ -178,11 +173,9 @@ p, span, label { color: #222222 !important; font-size: 16px !important; }
 """
 st.markdown(page_bg, unsafe_allow_html=True)
 
-# 🔹 Titles
 st.title("🔍 PCB Defect Detection")
 st.subheader("Upload a *reference PCB* (golden) and a *defected PCB* to detect issues.")
 
-# 🔹 Upload Panels
 col1, col2 = st.columns([1,1], gap="large")
 
 with col1:
@@ -210,9 +203,7 @@ with col2:
 # ==========================================
 if 'ref_file' in locals() and 'defect_file' in locals() and ref_file and defect_file:
 
-    # 🔹 Extract PCB numbers from filenames (fixed to remove extensions)
     def get_pcb_number(filename):
-        """Return PCB number before first underscore, without file extension"""
         name = os.path.splitext(os.path.basename(filename))[0]
         pcb_no = name.split("_")[0]
         return pcb_no
@@ -220,58 +211,20 @@ if 'ref_file' in locals() and 'defect_file' in locals() and ref_file and defect_
     ref_pcb_no = get_pcb_number(ref_file.name)
     defect_pcb_no = get_pcb_number(defect_file.name)
 
-    # 🔹 PCB number mismatch warning
     if ref_pcb_no != defect_pcb_no:
         st.warning(f"⚠ PCB number mismatch! Reference: {ref_pcb_no}, Defected: {defect_pcb_no}. Detection not run.")
     else:
         if st.button("🚀 Run Detection"):
-            annotated_img, preds, annotated_save_path = process_images(defect_path, ref_path)
+            annotated_img, annotated_save_path = process_images(defect_path, ref_path)
 
             st.markdown("---")
             st.subheader("📌 Annotated PCB with Defects")
             st.image(cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB), use_container_width=True)
 
-            # 🔽 Download annotated image
             with open(annotated_save_path, "rb") as f:
                 st.download_button(
                     "⬇ Download Annotated Image",
                     f,
                     file_name=os.path.basename(annotated_save_path),
                     mime="image/png"
-                )
-
-            # 📋 Display ROI predictions
-            st.subheader("📋 ROI Predictions")
-            rows = []
-            for roi_path, label, conf, top3 in preds:
-                st.image(roi_path, caption=f"Pred: {label} ({conf:.2f})", width=200)
-
-                # 🔹 Top-3 inside black box
-                st.markdown(
-                    f"""
-                    <div style='background-color:#1e1e1e; color:#00ff00; padding:10px; border-radius:8px;'>
-                        <b>Top-3 Predictions:</b><br>
-                        {"<br>".join([f"{i+1}. {cls} — {prob:.2f}" for i,(cls,prob) in enumerate(top3)])}
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
-
-                rows.append({
-                    "ROI File": os.path.basename(roi_path),
-                    "Prediction": label,
-                    "Confidence": conf,
-                    "Top-3": str(top3)
-                })
-
-            # 🔽 Download prediction log as CSV
-            if rows:
-                df = pd.DataFrame(rows)
-                csv_buffer = io.StringIO()
-                df.to_csv(csv_buffer, index=False)
-                st.download_button(
-                    "⬇ Download Prediction Log (CSV)",
-                    data=csv_buffer.getvalue(),
-                    file_name="prediction_log.csv",
-                    mime="text/csv"
                 )

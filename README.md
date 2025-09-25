@@ -1,21 +1,20 @@
 ⚡ PCB Defect Detection System
-
 📖 Overview
 
--Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures.
+Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures.
 This project presents an AI-powered defect detection system that automatically:
 
--Compares a golden PCB (reference) with a defected PCB
+Compares a golden PCB (reference) with a defected PCB
 
--Detects abnormal regions through image subtraction
+Detects abnormal regions through image subtraction
 
--Extracts Regions of Interest (ROIs) for detailed inspection
+Extracts Regions of Interest (ROIs) for detailed inspection
 
--Classifies defects using a deep learning model (EfficientNet-B4)
+Classifies defects using a deep learning model (EfficientNet-B4)
 
--Produces annotated images and prediction reports
+Produces annotated images and prediction reports
 
--A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
+A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
 
 🛠 Features
 
@@ -25,13 +24,15 @@ This project presents an AI-powered defect detection system that automatically:
 
 🤖 AI Classification – Uses EfficientNet-B4 trained on PCB defect dataset
 
+📊 Prediction Logs – Exports results as a CSV file
+
 🌐 Streamlit UI – User-friendly frontend to upload, visualize, and download results
 
 ⚙️ Tech Stack
 
 Language: Python
 
-Deep Learning: PyTorch, Torchvision,cv2
+Deep Learning: PyTorch, Torchvision
 
 Model: EfficientNet-B4 (fine-tuned)
 
@@ -51,7 +52,6 @@ PCB_DEFECT_DETECTION/
 │── roi_images.py             # Extracts Regions of Interest
 │── testing_pipeline.py       # ROI testing with trained model
 
-
 🚀 Getting Started
 1️⃣ Clone Repository
 git clone --single-branch --branch Chittamuru-Sai-Harshini-Reddy https://github.com/mentor-pranaya/-circuit-guard-PCB-defect-detection-and-application.git
@@ -66,6 +66,11 @@ Activate:
 Windows:
 
 venv\Scripts\activate
+
+
+Linux/Mac:
+
+source venv/bin/activate
 
 3️⃣ Install Requirements
 pip install -r requirements.txt
@@ -93,15 +98,15 @@ View results:
 
 🔬 Core Workflow
 
-1.Image Subtraction → Highlight differences between golden & defected PCBs
+Image Subtraction → Highlight differences between golden & defected PCBs
 
-2.Defect Mask Generation → Binary mask of detected defects
+Defect Mask Generation → Binary mask of detected defects
 
-3.ROI Extraction → Crop defected areas into patches
+ROI Extraction → Crop defected areas into patches
 
-4.Classification → Run each ROI through EfficientNet-B4 model
+Classification → Run each ROI through EfficientNet-B4 model
 
-5.Annotation & Reporting → Overlay bounding boxes & save logs
+Annotation & Reporting → Overlay bounding boxes & save logs
 
 📊 Output Samples
 
@@ -109,13 +114,13 @@ View results:
 
 🌱 Future Enhancements
 
--Real-time detection using camera feed
+Real-time detection using camera feed
 
--Support for multi-class PCB defects
+Support for multi-class PCB defects
 
--Integration with manufacturing pipelines
+Integration with manufacturing pipelines
 
--Explainable AI for visualizing feature importance
+Explainable AI for visualizing feature importance
 
 ✨ Conclusion
 

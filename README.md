@@ -125,4 +125,4 @@ Explainable AI for visualizing feature importance
 ✨ Conclusion
 
 This project demonstrates the use of AI + Computer Vision for automated PCB defect detection.
-It reduces manual inspection time, increases accuracy, and provides a scalable solution for electronics manufacturing quality control.
+It reduces manual inspection time, increases accuracy, and provides a scalable solution for electronics manufacturing quality control

@@ -1,20 +1,21 @@
 ⚡ PCB Defect Detection System
+
 📖 Overview
 
-Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures.
+-Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures.
 This project presents an AI-powered defect detection system that automatically:
 
-Compares a golden PCB (reference) with a defected PCB
+-Compares a golden PCB (reference) with a defected PCB
 
-Detects abnormal regions through image subtraction
+-Detects abnormal regions through image subtraction
 
-Extracts Regions of Interest (ROIs) for detailed inspection
+-Extracts Regions of Interest (ROIs) for detailed inspection
 
-Classifies defects using a deep learning model (EfficientNet-B4)
+-Classifies defects using a deep learning model (EfficientNet-B4)
 
-Produces annotated images and prediction reports
+-Produces annotated images and prediction reports
 
-A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
+-A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
 
 🛠 Features
 
@@ -41,6 +42,7 @@ Data Handling: Pandas, NumPy
 Frontend: Streamlit
 
 📂 Folder Structure
+
 PCB_DEFECT_DETECTION/
 │── PCB_DATASET/              # Dataset folder
 │── app.py                    # Streamlit app (main pipeline)
@@ -50,9 +52,12 @@ PCB_DEFECT_DETECTION/
 │── roi_images.py         # Extracts Regions of Interest
 │── testing_pipeline.py       # ROI testing with trained model
 
+
 🚀 Getting Started
+
 1️⃣ Clone Repository
 git clone --single-branch --branch Chittamuru-Sai-Harshini-Reddy https://github.com/mentor-pranaya/-circuit-guard-PCB-defect-detection-and-application.git
+
 cd "-circuit-guard-PCB-defect-detection-and-application" 
 
 2️⃣ Create Virtual Environment

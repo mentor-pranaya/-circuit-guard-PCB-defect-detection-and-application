@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CircuitGuard - PCB Defect Detection</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(120deg, #1E90FF, #00BFFF);
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+    .upload-box {
+      background: white;
+      color: black;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 20px auto;
+      width: 60%;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    input[type=file] {
+      margin: 10px;
+    }
+    button {
+      background: #1E90FF;
+      border: none;
+      padding: 10px 20px;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #104E8B;
+    }
+    .result {
+      margin-top: 20px;
+    }
+    img {
+      max-width: 80%;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ CircuitGuard: PCB Defect Detection</h1>
+  <p>Upload your PCB images to detect defects instantly</p>
+
+  <div class="upload-box">
+    <input type="file" id="template" accept="image/*"><br>
+    <input type="file" id="test" accept="image/*"><br><br>
+    <button onclick="uploadImages()">🚀 Run Detection</button>
+  </div>
+
+  <div class="result" id="result"></div>
+
+  <script>
+    async function uploadImages(){
+      let template = document.getElementById('template').files[0];
+      let test = document.getElementById('test').files[0];
+      if(!template || !test){
+        alert("Please upload both images!");
+        return;
+      }
+
+      let formData = new FormData();
+      formData.append("template", template);
+      formData.append("test", test);
+
+      // Replace /api/upload with your backend endpoint
+      let response = await fetch("/api/upload", {method:"POST", body: formData});
+      let data = await response.blob();
+      let imgUrl = URL.createObjectURL(data);
+      document.getElementById('result').innerHTML = <h3>✅ Defects Detected:</h3><img src="${imgUrl}" />;
+    }
+  </script>
+</body>
+</html>

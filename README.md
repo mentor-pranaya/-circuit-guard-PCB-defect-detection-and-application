@@ -42,30 +42,30 @@ Data Handling: Pandas, NumPy
 Frontend: Streamlit
 
 📂 Folder Structure
-
 PCB_DEFECT_DETECTION/
 │── PCB_DATASET/              # Dataset folder
 │── app.py                    # Streamlit app (main pipeline)
 │── requirements.txt          # Dependencies
 │── train_efficientnet.py     # Model training script
 │── image_subtraction.py      # PCB image subtraction
-│── roi_images.py         # Extracts Regions of Interest
+│── roi_images.py             # Extracts Regions of Interest
 │── testing_pipeline.py       # ROI testing with trained model
 
 
 🚀 Getting Started
-
 1️⃣ Clone Repository
 git clone --single-branch --branch Chittamuru-Sai-Harshini-Reddy https://github.com/mentor-pranaya/-circuit-guard-PCB-defect-detection-and-application.git
-
-cd "-circuit-guard-PCB-defect-detection-and-application" 
+cd "-circuit-guard-PCB-defect-detection-and-application"
 
 2️⃣ Create Virtual Environment
 python -m venv venv
 
+
 Activate:
 
-Windows: venv\Scripts\activate
+Windows:
+
+venv\Scripts\activate
 
 3️⃣ Install Requirements
 pip install -r requirements.txt
@@ -87,21 +87,21 @@ Click Run Detection
 
 View results:
 
-Annotated PCB with bounding boxes + defect labels
+✅ Annotated PCB with bounding boxes + defect labels
 
-Downloadable output image
+✅ Downloadable output image
 
 🔬 Core Workflow
 
-Image Subtraction → Highlight differences between golden & defected PCBs
+1.Image Subtraction → Highlight differences between golden & defected PCBs
 
-Defect Mask Generation → Binary mask of detected defects
+2.Defect Mask Generation → Binary mask of detected defects
 
-ROI Extraction → Crop defected areas into patches
+3.ROI Extraction → Crop defected areas into patches
 
-Classification → Run each ROI through EfficientNet-B4 model
+4.Classification → Run each ROI through EfficientNet-B4 model
 
-Annotation & Reporting → Overlay bounding boxes & save logs
+5.Annotation & Reporting → Overlay bounding boxes & save logs
 
 📊 Output Samples
 
@@ -109,13 +109,13 @@ Annotation & Reporting → Overlay bounding boxes & save logs
 
 🌱 Future Enhancements
 
-Real-time detection using camera feed
+-Real-time detection using camera feed
 
-Support for multi-class PCB defects
+-Support for multi-class PCB defects
 
-Integration with manufacturing pipelines
+-Integration with manufacturing pipelines
 
-Explainable AI for visualizing feature importance
+-Explainable AI for visualizing feature importance
 
 ✨ Conclusion
 

@@ -42,19 +42,12 @@ Data Handling: Pandas, NumPy
 
 Frontend: Streamlit
 
-📂 Folder Structure
-PCB_DEFECT_DETECTION/
-│── PCB_DATASET/              # Dataset folder
-│── app.py                    # Streamlit app (main pipeline)
-│── requirements.txt          # Dependencies
-│── train_efficientnet.py     # Model training script
-│── image_subtraction.py      # PCB image subtraction
-│── roi_images.py             # Extracts Regions of Interest
-│── testing_pipeline.py       # ROI testing with trained model
 
 🚀 Getting Started
+
 1️⃣ Clone Repository
 git clone --single-branch --branch Chittamuru-Sai-Harshini-Reddy https://github.com/mentor-pranaya/-circuit-guard-PCB-defect-detection-and-application.git
+
 cd "-circuit-guard-PCB-defect-detection-and-application"
 
 2️⃣ Create Virtual Environment

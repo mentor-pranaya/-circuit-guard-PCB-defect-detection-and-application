@@ -146,7 +146,7 @@ def main():
     optimizer = optim.Adam(model.parameters(), lr=1e-3)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode="min", factor=0.3, patience=3)
 
-    EPOCHS = 5
+    EPOCHS = 30
     best_val_acc = 0.0
     train_loss_hist, val_loss_hist, train_acc_hist, val_acc_hist = [], [], [], []
 
@@ -211,3 +211,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

@@ -1,0 +1,3 @@
+I created a simple web interface using Streamlit where users can upload PCB images.
+I added options to upload both the template and test images.
+After uploading, the system shows the output with bounding boxes and defect labels.

@@ -1,3 +1,5 @@
-I created a simple web interface using Streamlit where users can upload PCB images.
-I added options to upload both the template and test images.
-After uploading, the system shows the output with bounding boxes and defect labels.
+Created a web interface using Streamlit for easy interaction.
+Added upload options for both template and test PCB images.
+Integrated the backend defect detection model with the frontend.
+Displayed output image with bounding boxes and defect labels for clear visualization.
+Built the app.py script to ensure real-time predictions and smooth user experience.

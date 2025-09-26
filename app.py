@@ -24,7 +24,7 @@ os.makedirs(SUBTRACTED_DIR, exist_ok=True)
 # ==== Load Checkpoint ====
 # =========================
 ckpt = torch.load(MODEL_FILE, map_location=device)
-label_classes = ckpt.get("classes", ["No_Defect", "Defect_Type1", "Defect_Type2"])
+label_classes = ckpt.get("classes")
 
 # =========================
 # ==== Model Definition ===

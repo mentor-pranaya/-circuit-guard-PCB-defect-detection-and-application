@@ -16,7 +16,8 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 CLASSES = ['Missing_hole', 'Mouse_bite', 'Open_circuit', 'Short', 'Spur', 'Spurious_copper']
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Loads the model
+# Load model
+
 @st.cache_resource
 def load_model():
     model = EfficientNet.from_pretrained('efficientnet-b4')
@@ -29,7 +30,9 @@ def load_model():
 
 model = load_model()
 
-# Preprocessing transform
+
+# Transform
+
 transform = transforms.Compose([
     transforms.Resize((128, 128)),
     transforms.ToTensor(),
@@ -38,6 +41,7 @@ transform = transforms.Compose([
 ])
 
 # Utility functions
+
 def make_mask(template_gray, test_gray):
     if template_gray.shape != test_gray.shape:
         template_gray = cv2.resize(template_gray, (test_gray.shape[1], test_gray.shape[0]))
@@ -67,13 +71,17 @@ def annotate_pcb(test_color, mask):
         roi = test_color[y:y+h, x:x+w]
         pred = predict_roi(roi)
         cv2.rectangle(annotated, (x, y), (x+w, y+h), (0,0,255), 2)
-        cv2.putText(annotated, pred, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0,255,0), 2)
+        # Green text with black outline for readability
+        cv2.putText(annotated, pred, (x, y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 4)  # outline
+        cv2.putText(annotated, pred, (x, y-10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0), 2)  # main text
     return annotated
 
 # Streamlit UI
 st.title("PCB Defect Detection App")
 
-# Load reference options
+# Load reference PCBs
 ref_files = [f for f in os.listdir(REFERENCE_DIR) if f.lower().endswith((".jpg",".png",".jpeg"))]
 if not ref_files:
     st.error("⚠️ No reference PCBs found in PCB USED folder!")
@@ -92,19 +100,21 @@ if uploaded is not None:
     if st.button("Run Detection"):
         st.info("🔍 Processing... Please wait")
 
-        # Load test
         test_bgr = cv2.cvtColor(np.array(test_pil), cv2.COLOR_RGB2BGR)
         test_gray = cv2.cvtColor(test_bgr, cv2.COLOR_BGR2GRAY)
 
-        # Subtraction & mask
         mask = make_mask(template_gray, test_gray)
-
-        # Annotate
         annotated = annotate_pcb(test_bgr, mask)
 
-        # Save and display
         save_path = os.path.join(OUTPUT_DIR, "annotated_result.jpg")
         cv2.imwrite(save_path, annotated)
-        st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB),
-                 caption="Defects Annotated")
-        st.success(f"Done! Saved result to {save_path}")
+
+        # Save path in session state
+        st.session_state["annotated_path"] = save_path
+
+# If annotated exists, always show + download
+if "annotated_path" in st.session_state:
+    annotated = cv2.imread(st.session_state["annotated_path"])
+    st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB), caption="Defects Annotated")
+    with open(st.session_state["annotated_path"], "rb") as f:
+        st.download_button("⬇️ Download Annotated Image", f, file_name="annotated_result.jpg")

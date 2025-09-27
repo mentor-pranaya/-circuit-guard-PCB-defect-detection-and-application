@@ -50,5 +50,5 @@ WEEK-5(WEB UI AND BACKEND INTEGRATION)
 SEP 15TH:Went through UI.
 SEP 16TH:Decided to work on HTML,CSS,JS.
 SEP 17th: Started working on Frontend.
-SEP 18TH: Completed UI part and started backend pipeline using Flash,torch
-SEP 19th: Completed both UI and backend Integration and tested the images with normal one and defected image and got 100% accuracy and detection.
+SEP 18TH: Completed UI part and started backend pipeline using Flask,torch
+SEP 19th: Completed both UI and backend integration with UI part and got 100% accuracy of prediction results by using best_checkpoint.

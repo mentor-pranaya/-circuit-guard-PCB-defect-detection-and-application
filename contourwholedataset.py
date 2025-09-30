@@ -2,7 +2,7 @@ import cv2
 import os
 
 # === Paths ===
-input_path = r"C:\Users\phaneendra ybs\Downloads\PCB_subtarction\Missing_hole"  
+input_path = r"C:\Users\phaneendra ybs\Downloads\PCB_subtarction\__________"  
 output_path = r"C:\Users\phaneendra ybs\Downloads\PCB_contour"
 
 os.makedirs(output_path, exist_ok=True)
@@ -46,4 +46,5 @@ for img_name in os.listdir(input_path):
     print(f"Processed: {img_name}, contours found: {len(contours)}")
 
 print("✅ Contour extraction completed for all valid images.")
+
 

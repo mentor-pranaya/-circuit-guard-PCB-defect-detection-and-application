@@ -5,7 +5,7 @@ Tasks Completed :
 2. Learned the different types of defects and what they are
 3. Explored each type of the defect
 
-IDE (I am going to work with) - VS Code
+IDE (I am going to work with) - VS Code, Google colab
 
 
 Date : 19/08/2025
@@ -127,3 +127,8 @@ Working in backend pipeline
 Date : 26/06/2025
 
 Working with the updates that mentioned in today's session
+
+
+Date : 30/09/2025
+
+Working with the required chnages optimization part.

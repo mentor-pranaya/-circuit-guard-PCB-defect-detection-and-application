@@ -82,6 +82,233 @@ DATE:22-09-2025(WEEK-6)
 work on UI part.
 
 
+DATE:19-08-2025
+   project:circuit guard PCB defect detection and application.
+   I had to know about the data understanding and setup
+   then later I accept the intivation of the GitHub repository.i had create my respective branch in that repository.
+   I successfully downloaded the PCB_dataset.
+   IDE which I used for this project is Visual Studio Code(VS Code).
+
+DATE:20-08-2025
+    Carefully observed dataset structure, features, and distribution.
+    learning about how Subtraction works for a folder and trying to test it.
+
+DATE:21-08-2025 
+    Verified Subtraction and done for rest folders.
+
+DATE:22-08-2025
+     1.Implemented subtraction and Otsu thresholding on the dataset
+     2.Analyzed the outputs against the actual images.
+
+DATE:25-08-2025
+      week-2 .
+      know about the contour extraction and ROI(region of interest) segmentation.
+      and doing the subtraction  work on remaining images. 
+
+DATE:26-08-2025
+      week-2.
+      Complete the data understanding and the subtraction.Update the github with the dataset details, python code for subtraction part.
+      i will continue the process of understanding about the contour extraction.
+
+DATE:27-08-2025, 28-08-2025, 29-08-2025
+
+    these 3 days ,i will totally worked on contour extraction section and completed the contour extraction on dataset.
+
+DATE:01-09-2025(3rd week)
+
+    starting my work on ROI segmentation.
+
+DATE:02-09-2025
+     continue my work on ROI segmentation.
+
+DATE:03-09-2025
+  know about the topic of the EfficientNet-B4.
+
+DATE:04-09-2025,05-09-2025
+   revise the subtraction part,contour extraction part and ROI part. discuss about the 
+   EfficientNet-B4 .
+
+DATE:08-09-2025(4th week)
+Working on model traning to raise the accuracy.
+
+DATE:09-09-2025
+Accuracy was struck at 75% trying to improve.
+
+DATE:10-09-2025
+Reached accuracy to 85% making it to best.
+
+DATE:11-09-2025
+Reached till 94% adjusting the parameters to improve the accuracy.
+
+DATE:12-09-2025
+Started working on testing.
+
+DATE:15-09-2025(WEEK-5)
+continues the testing part on the dataset.
+
+DATE:16-09-2025
+completes the testing part.
+
+DATE:17-09-2025
+Started to work on frontend.
+
+DATE:18-09-2025
+understand the concept of UI(user interface).
+
+DATE:19-09-2025
+Went through Streamlit library and started coding for UI part.
+
+DATE:20-09-2025
+Had a issue with libaries ,clear that issues and continues coding part.
+
+DATE:22-09-2025(WEEK-6)
+work on UI part.
+
+
+DATE:19-08-2025
+   project:circuit guard PCB defect detection and application.
+   I had to know about the data understanding and setup
+   then later I accept the intivation of the GitHub repository.i had create my respective branch in that repository.
+   I successfully downloaded the PCB_dataset.
+   IDE which I used for this project is Visual Studio Code(VS Code).
+
+DATE:20-08-2025
+    Carefully observed dataset structure, features, and distribution.
+    learning about how Subtraction works for a folder and trying to test it.
+
+DATE:21-08-2025 
+    Verified Subtraction and done for rest folders.
+
+DATE:22-08-2025
+     1.Implemented subtraction and Otsu thresholding on the dataset
+     2.Analyzed the outputs against the actual images.
+
+DATE:25-08-2025
+      week-2 .
+      know about the contour extraction and ROI(region of interest) segmentation.
+      and doing the subtraction  work on remaining images. 
+
+DATE:26-08-2025
+      week-2.
+      Complete the data understanding and the subtraction.Update the github with the dataset details, python code for subtraction part.
+      i will continue the process of understanding about the contour extraction.
+
+DATE:27-08-2025, 28-08-2025, 29-08-2025
+
+    these 3 days ,i will totally worked on contour extraction section and completed the contour extraction on dataset.
+
+DATE:01-09-2025(3rd week)
+
+    starting my work on ROI segmentation.
+
+DATE:02-09-2025
+     continue my work on ROI segmentation.
+
+DATE:03-09-2025
+  know about the topic of the EfficientNet-B4.
+
+DATE:04-09-2025,05-09-2025
+   revise the subtraction part,contour extraction part and ROI part. discuss about the 
+   EfficientNet-B4 .
+
+DATE:08-09-2025(4th week)
+Working on model traning to raise the accuracy.
+
+DATE:09-09-2025
+Accuracy was struck at 75% trying to improve.
+
+DATE:10-09-2025
+Reached accuracy to 85% making it to best.
+
+DATE:11-09-2025
+Reached till 94% adjusting the parameters to improve the accuracy.
+
+DATE:12-09-2025
+Started working on testing.
+
+DATE:15-09-2025(WEEK-5)
+continues the testing part on the dataset.
+
+DATE:16-09-2025
+completes the testing part.
+
+DATE:17-09-2025
+Started to work on frontend.
+
+DATE:18-09-2025
+understand the concept of UI(user interface).
+
+DATE:19-09-2025
+Went through Streamlit library and started coding for UI part.
+
+DATE:20-09-2025
+Had a issue with libaries ,clear that issues and continues coding part.
+
+DATE:22-09-2025(WEEK-6)
+work on UI part.
+
+DATE:23-09-2025
+Done with the UI part and also completes the frontend task.
+
+DATE:24-09-2025
+check the UI part how it works.
+
+DATE:25-09-2025
+starting work on backend pipeline.
+
+DATE:26-09-2025
+working on connect backend to frontend.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

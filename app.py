@@ -7,7 +7,7 @@ from efficientnet_pytorch import EfficientNet
 from torchvision import transforms
 import os
 
-# CONFIG - update paths
+# Paths
 REFERENCE_DIR = r"C:/Users/devak/Downloads/PCB_Defect_Project/PCB USED"
 MODEL_PATH = r"C:/Users/devak/Downloads/PCB_Defect_Project/efficientnet_b4.pth"
 OUTPUT_DIR = r"C:/Users/devak/Downloads/PCB_Defect_Project/Annotated_Test_Images"
@@ -16,22 +16,18 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 CLASSES = ['Missing_hole', 'Mouse_bite', 'Open_circuit', 'Short', 'Spur', 'Spurious_copper']
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# Load model
-
+# Load Model
 @st.cache_resource
 def load_model():
     model = EfficientNet.from_pretrained('efficientnet-b4')
     model._fc = torch.nn.Linear(model._fc.in_features, len(CLASSES))
     state = torch.load(MODEL_PATH, map_location=DEVICE)
     model.load_state_dict(state)
-    model = model.to(DEVICE)
+    model.to(DEVICE)
     model.eval()
     return model
 
 model = load_model()
-
-
-# Transform
 
 transform = transforms.Compose([
     transforms.Resize((128, 128)),
@@ -40,8 +36,8 @@ transform = transforms.Compose([
                          [0.229, 0.224, 0.225]),
 ])
 
-# Utility functions
-
+# Utility Functions
+@st.cache_data
 def make_mask(template_gray, test_gray):
     if template_gray.shape != test_gray.shape:
         template_gray = cv2.resize(template_gray, (test_gray.shape[1], test_gray.shape[0]))
@@ -57,8 +53,7 @@ def predict_roi(roi_bgr):
     roi_pil = Image.fromarray(roi_rgb)
     tensor = transform(roi_pil).unsqueeze(0).to(DEVICE)
     with torch.no_grad():
-        out = model(tensor)
-        pred = out.argmax(1).item()
+        pred = model(tensor).argmax(1).item()
     return CLASSES[pred]
 
 def annotate_pcb(test_color, mask):
@@ -71,29 +66,52 @@ def annotate_pcb(test_color, mask):
         roi = test_color[y:y+h, x:x+w]
         pred = predict_roi(roi)
         cv2.rectangle(annotated, (x, y), (x+w, y+h), (0,0,255), 2)
-        # Green text with black outline for readability
         cv2.putText(annotated, pred, (x, y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 4)  # outline
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 4)
         cv2.putText(annotated, pred, (x, y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0), 2)  # main text
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0), 2)
     return annotated
 
+# Fast Similarity Check
+@st.cache_data
+def load_reference_histograms():
+    """Precompute histograms of all golden PCBs"""
+    ref_cache = {}
+    ref_files = [f for f in os.listdir(REFERENCE_DIR) if f.lower().endswith((".jpg",".png",".jpeg"))]
+    for f in ref_files:
+        path = os.path.join(REFERENCE_DIR, f)
+        ref_gray = cv2.imread(path, cv2.IMREAD_GRAYSCALE)
+        ref_gray = cv2.resize(ref_gray, (256, 256))  # small size for fast computation
+        hist = cv2.calcHist([ref_gray], [0], None, [256], [0,256])
+        hist = cv2.normalize(hist, hist).flatten()
+        ref_cache[f] = hist
+    return ref_cache
+
+@st.cache_data
+def get_most_similar_reference(test_gray, ref_cache):
+    test_gray_small = cv2.resize(test_gray, (256,256))
+    test_hist = cv2.calcHist([test_gray_small], [0], None, [256], [0,256])
+    test_hist = cv2.normalize(test_hist, test_hist).flatten()
+
+    best_score, best_file = -1, None
+    for f, hist in ref_cache.items():
+        score = cv2.compareHist(hist, test_hist, cv2.HISTCMP_CORREL)
+        if score > best_score:
+            best_score = score
+            best_file = f
+
+    best_ref = cv2.imread(os.path.join(REFERENCE_DIR, best_file), cv2.IMREAD_GRAYSCALE)
+    return best_ref, best_score, best_file
+
+# Precompute golden PCB histograms once
+ref_cache = load_reference_histograms()
+
 # Streamlit UI
-st.title("PCB Defect Detection App")
-
-# Load reference PCBs
-ref_files = [f for f in os.listdir(REFERENCE_DIR) if f.lower().endswith((".jpg",".png",".jpeg"))]
-if not ref_files:
-    st.error("⚠️ No reference PCBs found in PCB USED folder!")
-    st.stop()
-
-selected_ref = st.selectbox("Select Reference PCB", ref_files)
-reference_path = os.path.join(REFERENCE_DIR, selected_ref)
-template_gray = cv2.imread(reference_path, cv2.IMREAD_GRAYSCALE)
+st.title("PCB Defect Detection")
 
 uploaded = st.file_uploader("Upload a Test PCB Image", type=["jpg", "png", "jpeg"])
 
-if uploaded is not None:
+if uploaded:
     test_pil = Image.open(uploaded).convert("RGB")
     st.image(test_pil, caption="Uploaded Test PCB")
 
@@ -103,16 +121,19 @@ if uploaded is not None:
         test_bgr = cv2.cvtColor(np.array(test_pil), cv2.COLOR_RGB2BGR)
         test_gray = cv2.cvtColor(test_bgr, cv2.COLOR_BGR2GRAY)
 
-        mask = make_mask(template_gray, test_gray)
+        # Fast similarity check
+        best_ref, similarity_score, best_file = get_most_similar_reference(test_gray, ref_cache)
+        st.success(f"Most similar reference PCB: {best_file} (Score: {similarity_score:.4f})")
+
+        # Mask and annotation
+        mask = make_mask(best_ref, test_gray)
         annotated = annotate_pcb(test_bgr, mask)
 
         save_path = os.path.join(OUTPUT_DIR, "annotated_result.jpg")
         cv2.imwrite(save_path, annotated)
-
-        # Save path in session state
         st.session_state["annotated_path"] = save_path
 
-# If annotated exists, always show + download
+# Display annotated image and download
 if "annotated_path" in st.session_state:
     annotated = cv2.imread(st.session_state["annotated_path"])
     st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB), caption="Defects Annotated")

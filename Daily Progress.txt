@@ -132,3 +132,8 @@ Working with the updates that mentioned in today's session
 Date : 30/09/2025
 
 Working with the required chnages optimization part.
+
+
+Date : 02/09/2025
+
+finished with the ui part and the backend pipeline

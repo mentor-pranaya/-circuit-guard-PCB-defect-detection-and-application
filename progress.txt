@@ -259,6 +259,23 @@ starting work on backend pipeline.
 DATE:26-09-2025
 working on connect backend to frontend.
 
+DATE:29-09-2025(Week-7)
+contiues the working on connect backend to frontend.
+
+DATE:30-09-2025
+complete the task that connects the backend to frontend and start the improvisation in app that is upload only one defected image and find the defects in that defected image through same pipeline by knowing the similarity between the reference images.
+
+DATE:01-10-2025
+continues the process of improvisation.
+
+DATE:02-10-2025
+working on pipeline.
+
+DATE:03-10-2025
+completes the task.
+
+
+
 
 
 

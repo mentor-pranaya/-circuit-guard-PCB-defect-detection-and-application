@@ -8,7 +8,7 @@ import streamlit as st
 import numpy as np
 import io
 import time
-# ... (all your existing imports)
+from skimage.metrics import structural_similarity as ssim
 
 # ==========================================
 # 1️⃣ Load Model and Configuration (Existing code)
@@ -19,12 +19,8 @@ classes = ["missing_hole", "mousebite", "open_circuit", "short_circuit", "spurio
 
 def predict_roi(roi_img, model, class_names):
     """
-    Predicts the defect class for a given ROI image.
-    
-    This is a placeholder function that simulates a model's output.
-    To use a real model, replace this with your actual inference logic.
+    Placeholder: Predicts the defect class for a given ROI image.
     """
-    # Placeholder logic: randomly pick a defect and a confidence score
     label = np.random.choice(class_names)
     conf = np.random.uniform(0.7, 0.99)
     return label, conf
@@ -33,7 +29,6 @@ def predict_roi(roi_img, model, class_names):
 # 2️⃣ Image Subtraction Function (Existing code)
 # ==========================================
 def subtract_images(defect_bytes, ref_bytes):
-    # ... (Your existing subtract_images function) ...
     """
     Performs image subtraction on in-memory images.
     Returns the original defect image (as BGR) and the cleaned mask.
@@ -50,6 +45,7 @@ def subtract_images(defect_bytes, ref_bytes):
     defect_gray = cv2.cvtColor(defect_color, cv2.COLOR_BGR2GRAY)
     ref_gray = cv2.cvtColor(ref_color, cv2.COLOR_BGR2GRAY)
 
+    # Ensure reference image is the same size as the defect image for subtraction
     if ref_gray.shape != defect_gray.shape:
         ref_gray = cv2.resize(ref_gray, (defect_gray.shape[1], defect_gray.shape[0]))
 
@@ -58,6 +54,7 @@ def subtract_images(defect_bytes, ref_bytes):
 
     subtracted = cv2.absdiff(defect_blur, ref_blur)
 
+    # ... (rest of your existing thresholding and morphology) ...
     binary = cv2.adaptiveThreshold(subtracted, 255,
                                    cv2.ADAPTIVE_THRESH_MEAN_C,
                                    cv2.THRESH_BINARY, 35, -5)
@@ -76,7 +73,6 @@ def extract_rois(orig_img, mask, min_area=200, min_w=10, min_h=10):
     # ... (Your existing extract_rois function) ...
     """
     Extracts Regions of Interest (ROIs) from an image based on a mask.
-    Returns a list of dictionaries with 'roi_img' and 'bbox'.
     """
     contours, _ = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     
@@ -96,31 +92,76 @@ def extract_rois(orig_img, mask, min_area=200, min_w=10, min_h=10):
     return results
 
 # ==========================================
-# 4️⃣ Full Pipeline (Existing code)
+# 4️⃣ NEW: SSIM and Auto-Matching Functions
+# ==========================================
+
+def calculate_ssim(img1, img2):
+    """Calculates SSIM between two grayscale images of potentially different sizes."""
+    # Resize image 2 to match image 1's size for SSIM comparison
+    img2_resized = cv2.resize(img2, (img1.shape[1], img1.shape[0]))
+    
+    # Compute SSIM
+    score, diff = ssim(img1, img2_resized, full=True)
+    return score
+
+@st.cache_data
+def find_best_match_ssim(defect_bytes, ref_dir, ref_files):
+    """
+    Finds the reference image in ref_dir that has the highest SSIM score
+    with the uploaded defect image.
+    """
+    # Convert defect image bytes to OpenCV image (grayscale for SSIM)
+    defect_np = np.frombuffer(defect_bytes, np.uint8)
+    defect_color = cv2.imdecode(defect_np, cv2.IMREAD_COLOR)
+    defect_gray = cv2.cvtColor(defect_color, cv2.COLOR_BGR2GRAY)
+
+    best_score = -1
+    best_match_name = None
+    best_match_bytes = None
+
+    for ref_name in ref_files:
+        ref_path = os.path.join(ref_dir, ref_name)
+        
+        # Load reference image (grayscale)
+        ref_image_cv = cv2.imread(ref_path, cv2.IMREAD_GRAYSCALE)
+        
+        if ref_image_cv is None:
+            continue # Skip if file cannot be read
+            
+        # Calculate SSIM (defect_gray is the reference size)
+        score = calculate_ssim(defect_gray, ref_image_cv)
+
+        if score > best_score:
+            best_score = score
+            best_match_name = ref_name
+            # Read the bytes of the best match
+            with open(ref_path, "rb") as f:
+                best_match_bytes = f.read()
+
+    return best_match_name, best_match_bytes, best_score
+
+# ==========================================
+# 5️⃣ Full Pipeline (Modified for Auto-Match)
 # ==========================================
 def process_images(defect_bytes, ref_bytes):
-    # ... (Your existing process_images function) ...
     """
     Executes the full defect detection pipeline.
     """
+    # ... (Your existing process_images logic) ...
     defect_color, mask = subtract_images(defect_bytes, ref_bytes)
     roi_results = extract_rois(defect_color, mask)
     annotated_img = defect_color.copy()
 
     detected_defects = []
     for roi in roi_results:
-        # Use the prediction function to get the label and confidence
         label, conf = predict_roi(roi['roi_img'], None, classes)
         
         x1, y1, x2, y2 = roi['bbox']
 
-        # Add the detected defect to the list
         detected_defects.append({"label": label, "box": (x1, y1, x2, y2), "confidence": conf})
 
-        # Draw the bounding box
         cv2.rectangle(annotated_img, (x1, y1), (x2, y2), (0, 0, 255), 3)
 
-        # Create the text label with a black background for clarity
         text = f"Defect ({conf:.2f})"
         font_scale = 1.2
         font_thickness = 3
@@ -134,31 +175,14 @@ def process_images(defect_bytes, ref_bytes):
     return annotated_img, detected_defects
 
 # ==========================================
-# 5️⃣ NEW: Default Image Loading Function
+# 6️⃣ Main Streamlit App (Simplified UI)
 # ==========================================
 
-def load_default_ref_image(file_path):
-    """
-    Loads a local image file and returns its content as a bytes stream.
-    This mimics the output of st.file_uploader.getvalue().
-    """
-    if not os.path.exists(file_path):
-        st.error(f"❌ Default reference image file not found at: {file_path}")
-        return None
-    try:
-        with open(file_path, "rb") as f:
-            image_bytes = f.read()
-        return image_bytes
-    except Exception as e:
-        st.error(f"❌ Error loading default image: {e}")
-        return None
-
-
 def main():
-    """Main Streamlit app function with the new UI."""
-    st.set_page_config(page_title="AI Circuit Guard", layout="wide")
+    """Main Streamlit app function with the simplified UI and auto-matching."""
+    st.set_page_config(page_title="AI Circuit Guard - Auto SSIM Match", layout="wide")
     st.title("AI Circuit Guard")
-    # ... (Your existing CSS and container markdown) ...
+    # ... (Your existing CSS) ...
     st.markdown(
         """
         <style>
@@ -194,81 +218,82 @@ def main():
     st.markdown(
         """
         <div class="container">
-            <h2 style='text-align: center; color: #E0E0E0;'>Select Reference and Upload Defected PCB Image</h2>
-            <p style='text-align: center; color: #A0A0A0;'>Choose a golden (reference) image and upload a defected image to begin the analysis.</p>
+            <h2 style='text-align: center; color: #E0E0E0;'>Upload Defected PCB Image for Auto-Analysis</h2>
+            <p style='text-align: center; color: #A0A0A0;'>The system will automatically find the best golden reference image from the database using Structural Similarity (SSIM).</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
     # 1. Configuration for Default Reference Images
-    # NOTE: You must ensure this path is accessible by the Streamlit application.
     REF_IMAGE_DIR = r"C:\Users\harsh\OneDrive\Documents\pythonvs\PCB_DATA\PCB_USED"
     
-    # Get list of image files (e.g., .jpg, .png)
+    # Get list of image files
     try:
         ref_image_files = [f for f in os.listdir(REF_IMAGE_DIR) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
         if not ref_image_files:
-             st.error(f"No image files found in the directory: {REF_IMAGE_DIR}")
+             st.error(f"No reference image files found in the directory: {REF_IMAGE_DIR}. Please check the path.")
              return
     except FileNotFoundError:
-        st.error(f"❌ Reference image directory not found: {REF_IMAGE_DIR}")
+        st.error(f"❌ Reference image directory not found: **{REF_IMAGE_DIR}**. Please check the path.")
         return
     except Exception as e:
         st.error(f"An error occurred while listing files: {e}")
         return
 
-    col1, col2 = st.columns(2)
-    selected_ref_file = None
-    ref_bytes = None
+    col1, col2 = st.columns([1, 1])
     defect_file = None
-
+    
+    # Simplified UI: Only defected image upload
     with col1:
-        st.header("Select Reference Image (Default)")
-        
-        # 2. Use st.selectbox for reference image selection
-        selected_file_name = st.selectbox(
-            "Choose a Golden PCB Reference Image", 
-            options=ref_image_files, 
-            index=0, # Default to the first image
-            key="ref_selector"
-        )
-        
-        # 3. Load the selected image and its bytes
-        if selected_file_name:
-            selected_ref_path = os.path.join(REF_IMAGE_DIR, selected_file_name)
-            ref_bytes = load_default_ref_image(selected_ref_path)
-            
-            # Display the selected default image
-            if ref_bytes:
-                st.image(ref_bytes, caption=f"Reference Image: {selected_file_name}", use_column_width=True)
-
-    with col2:
         st.header("Upload Defected Image")
-        # Keep the file uploader for the defected image
-        defect_file = st.file_uploader("PCB to Test", type=["jpg", "jpeg", "png"], key="defected_uploader")
+        defect_file = st.file_uploader("Upload PCB to Test", type=["jpg", "jpeg", "png"], key="defected_uploader")
         if defect_file:
-            st.image(defect_file, caption="Defected Image", use_column_width=True)
+            st.image(defect_file, caption="Uploaded Defected Image", use_column_width=True)
+            
+    # Placeholder for displaying the automatically selected reference image
+    with col2:
+        st.header("Automatically Selected Reference")
+        ref_image_placeholder = st.empty()
 
-    # 4. Update the processing logic to use the loaded ref_bytes
-    # Check that both the default reference image and the uploaded defect image are available
-    if ref_bytes and defect_file:
+    if defect_file:
         st.divider()
-        if st.button("Detect Defects", use_container_width=True):
-            with st.spinner("Detecting defects... Please wait."):
+        if st.button("Detect Defects (Auto-Match Reference)", use_container_width=True):
+            with st.spinner("1/2. Auto-matching reference image using SSIM..."):
                 try:
-                    # Simulate a delay for the processing
-                    time.sleep(2)
+                    # Auto-Match the reference image
+                    defect_bytes = defect_file.getvalue()
                     
-                    # Use the pre-loaded ref_bytes and the uploaded defect_file bytes
-                    annotated_img, defects_list = process_images(defect_file.getvalue(), ref_bytes)
+                    best_match_name, ref_bytes, ssim_score = find_best_match_ssim(
+                        defect_bytes, REF_IMAGE_DIR, ref_image_files
+                    )
+                    
+                    if ref_bytes is None:
+                        st.error("❌ Failed to find or load a matching reference image.")
+                        return
+
+                    st.success(f"✅ Best Reference Found: **{best_match_name}** (SSIM: {ssim_score:.4f})")
+                    
+                    # Display the automatically selected reference image
+                    ref_image_placeholder.image(io.BytesIO(ref_bytes), caption=f"Auto-Matched Reference: {best_match_name}", use_column_width=True)
+
+                except Exception as e:
+                    st.error(f"An error occurred during SSIM matching: {e}")
+                    return # Stop processing if matching failed
+
+            # Start defect analysis
+            with st.spinner("2/2. Detecting defects... Please wait."):
+                try:
+                    time.sleep(1) # Simulated delay for processing
+                    
+                    # Process using the uploaded defect image and the auto-matched reference image
+                    annotated_img, defects_list = process_images(defect_bytes, ref_bytes)
 
                     st.success("Defect analysis complete!")
                     st.header("Defect Analysis Output")
                     
                     st.image(cv2.cvtColor(annotated_img, cv2.COLOR_BGR2RGB), caption="Defected Image with Labels", use_column_width=True)
                     
-                    # Convert the output image to bytes for download
                     is_success, buffer = cv2.imencode(".png", annotated_img)
                     if is_success:
                         st.download_button(
@@ -279,7 +304,6 @@ def main():
                             use_container_width=True
                         )
                     
-                    # Display a summary of detected defects
                     st.subheader("Summary of Defects")
                     if defects_list:
                         for i, defect in enumerate(defects_list):
@@ -290,7 +314,7 @@ def main():
                 except Exception as e:
                     st.error(f"An error occurred during processing: {e}")
     else:
-        st.info("Please select a reference image and upload a defected image to enable the 'Detect Defects' button.")
+        st.info("Please upload a defected image to begin the automatic reference matching and defect analysis.")
 
 if __name__ == "__main__":
     main()

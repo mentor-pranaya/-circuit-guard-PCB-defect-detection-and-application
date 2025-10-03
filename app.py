@@ -8,41 +8,13 @@ import streamlit as st
 import numpy as np
 import io
 import time
+# ... (all your existing imports)
 
 # ==========================================
-# 1️⃣ Load Model and Configuration
+# 1️⃣ Load Model and Configuration (Existing code)
 # ==========================================
-# For this example, we'll use a placeholder function for prediction since
-# the actual model file is not available in this environment.
-#
-# To use a real model, uncomment the code below and replace the
-# placeholder functions with your own trained model's loading and inference logic.
-#
-# device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-# MODEL_PATH = "path/to/your/efficientnet_b4_best.pth"
-#
-# try:
-#     checkpoint = torch.load(MODEL_PATH, map_location=device)
-#     classes = checkpoint['classes']
-#     num_classes = len(classes)
-#
-#     model = models.efficientnet_b4(pretrained=False)
-#     model.classifier[1] = nn.Linear(model.classifier[1].in_features, num_classes)
-#     model.load_state_dict(checkpoint['model_state_dict'])
-#     model = model.to(device)
-#     model.eval()
-#
-#     transform = transforms.Compose([
-#         transforms.Resize((128, 128)),
-#         transforms.ToTensor(),
-#         transforms.Normalize([0.5, 0.5, 0.5], [0.5, 0.5, 0.5])
-#     ])
-#     model_loaded = True
-# except Exception as e:
-#     st.error(f"❌ Error loading the model. Please check the path and file: {e}")
-#     model_loaded = False
-#
-# Define the classes (can be hardcoded if the model is not loaded)
+# ... (Your existing model loading and predict_roi function) ...
+
 classes = ["missing_hole", "mousebite", "open_circuit", "short_circuit", "spurious_copper", "short"]
 
 def predict_roi(roi_img, model, class_names):
@@ -58,9 +30,10 @@ def predict_roi(roi_img, model, class_names):
     return label, conf
 
 # ==========================================
-# 2️⃣ Image Subtraction Function
+# 2️⃣ Image Subtraction Function (Existing code)
 # ==========================================
 def subtract_images(defect_bytes, ref_bytes):
+    # ... (Your existing subtract_images function) ...
     """
     Performs image subtraction on in-memory images.
     Returns the original defect image (as BGR) and the cleaned mask.
@@ -97,9 +70,10 @@ def subtract_images(defect_bytes, ref_bytes):
     return defect_color, cleaned
 
 # ==========================================
-# 3️⃣ ROI Extraction Function
+# 3️⃣ ROI Extraction Function (Existing code)
 # ==========================================
 def extract_rois(orig_img, mask, min_area=200, min_w=10, min_h=10):
+    # ... (Your existing extract_rois function) ...
     """
     Extracts Regions of Interest (ROIs) from an image based on a mask.
     Returns a list of dictionaries with 'roi_img' and 'bbox'.
@@ -122,9 +96,10 @@ def extract_rois(orig_img, mask, min_area=200, min_w=10, min_h=10):
     return results
 
 # ==========================================
-# 4️⃣ Full Pipeline
+# 4️⃣ Full Pipeline (Existing code)
 # ==========================================
 def process_images(defect_bytes, ref_bytes):
+    # ... (Your existing process_images function) ...
     """
     Executes the full defect detection pipeline.
     """
@@ -158,10 +133,32 @@ def process_images(defect_bytes, ref_bytes):
 
     return annotated_img, detected_defects
 
+# ==========================================
+# 5️⃣ NEW: Default Image Loading Function
+# ==========================================
+
+def load_default_ref_image(file_path):
+    """
+    Loads a local image file and returns its content as a bytes stream.
+    This mimics the output of st.file_uploader.getvalue().
+    """
+    if not os.path.exists(file_path):
+        st.error(f"❌ Default reference image file not found at: {file_path}")
+        return None
+    try:
+        with open(file_path, "rb") as f:
+            image_bytes = f.read()
+        return image_bytes
+    except Exception as e:
+        st.error(f"❌ Error loading default image: {e}")
+        return None
+
+
 def main():
     """Main Streamlit app function with the new UI."""
     st.set_page_config(page_title="AI Circuit Guard", layout="wide")
     st.title("AI Circuit Guard")
+    # ... (Your existing CSS and container markdown) ...
     st.markdown(
         """
         <style>
@@ -197,29 +194,65 @@ def main():
     st.markdown(
         """
         <div class="container">
-            <h2 style='text-align: center; color: #E0E0E0;'>Upload PCB Images</h2>
-            <p style='text-align: center; color: #A0A0A0;'>Please upload a golden (reference) image and a defected image to begin the analysis.</p>
+            <h2 style='text-align: center; color: #E0E0E0;'>Select Reference and Upload Defected PCB Image</h2>
+            <p style='text-align: center; color: #A0A0A0;'>Choose a golden (reference) image and upload a defected image to begin the analysis.</p>
         </div>
         """,
         unsafe_allow_html=True
     )
 
+    # 1. Configuration for Default Reference Images
+    # NOTE: You must ensure this path is accessible by the Streamlit application.
+    REF_IMAGE_DIR = r"C:\Users\harsh\OneDrive\Documents\pythonvs\PCB_DATA\PCB_USED"
+    
+    # Get list of image files (e.g., .jpg, .png)
+    try:
+        ref_image_files = [f for f in os.listdir(REF_IMAGE_DIR) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
+        if not ref_image_files:
+             st.error(f"No image files found in the directory: {REF_IMAGE_DIR}")
+             return
+    except FileNotFoundError:
+        st.error(f"❌ Reference image directory not found: {REF_IMAGE_DIR}")
+        return
+    except Exception as e:
+        st.error(f"An error occurred while listing files: {e}")
+        return
+
     col1, col2 = st.columns(2)
-    ref_file, defect_file = None, None
+    selected_ref_file = None
+    ref_bytes = None
+    defect_file = None
 
     with col1:
-        st.header("Upload Reference Image")
-        ref_file = st.file_uploader("Golden PCB", type=["jpg", "jpeg", "png"], key="ref_uploader")
-        if ref_file:
-            st.image(ref_file, caption="Reference Image", use_column_width=True)
+        st.header("Select Reference Image (Default)")
+        
+        # 2. Use st.selectbox for reference image selection
+        selected_file_name = st.selectbox(
+            "Choose a Golden PCB Reference Image", 
+            options=ref_image_files, 
+            index=0, # Default to the first image
+            key="ref_selector"
+        )
+        
+        # 3. Load the selected image and its bytes
+        if selected_file_name:
+            selected_ref_path = os.path.join(REF_IMAGE_DIR, selected_file_name)
+            ref_bytes = load_default_ref_image(selected_ref_path)
+            
+            # Display the selected default image
+            if ref_bytes:
+                st.image(ref_bytes, caption=f"Reference Image: {selected_file_name}", use_column_width=True)
 
     with col2:
         st.header("Upload Defected Image")
+        # Keep the file uploader for the defected image
         defect_file = st.file_uploader("PCB to Test", type=["jpg", "jpeg", "png"], key="defected_uploader")
         if defect_file:
             st.image(defect_file, caption="Defected Image", use_column_width=True)
 
-    if ref_file and defect_file:
+    # 4. Update the processing logic to use the loaded ref_bytes
+    # Check that both the default reference image and the uploaded defect image are available
+    if ref_bytes and defect_file:
         st.divider()
         if st.button("Detect Defects", use_container_width=True):
             with st.spinner("Detecting defects... Please wait."):
@@ -227,7 +260,8 @@ def main():
                     # Simulate a delay for the processing
                     time.sleep(2)
                     
-                    annotated_img, defects_list = process_images(defect_file.getvalue(), ref_file.getvalue())
+                    # Use the pre-loaded ref_bytes and the uploaded defect_file bytes
+                    annotated_img, defects_list = process_images(defect_file.getvalue(), ref_bytes)
 
                     st.success("Defect analysis complete!")
                     st.header("Defect Analysis Output")
@@ -256,7 +290,7 @@ def main():
                 except Exception as e:
                     st.error(f"An error occurred during processing: {e}")
     else:
-        st.info("Please upload both images to enable the 'Detect Defects' button.")
+        st.info("Please select a reference image and upload a defected image to enable the 'Detect Defects' button.")
 
 if __name__ == "__main__":
     main()

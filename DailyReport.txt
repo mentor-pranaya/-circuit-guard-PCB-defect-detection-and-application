@@ -2,11 +2,9 @@ Week1 - 18 August 2025
  >Downloaded the dataset.
  >Checked the annotation files.
  >Set up my IDE(VScode) for the project.
-
 Week1 -19 August 2025
  >After understanding the Dataset.
  >Started preprocessing the given Datasets
-
 Week1 -20 August 2025
  >cleaned the given Data
  >Learnt about image subtraction
@@ -35,12 +33,51 @@ Week3 -4 September 2025
  >did the cropping part in ROI
 Week3 -5 September 2025
  >Started building efficientnet model using Pytorch
- >CSV file for training the input
+Week3 -6 September 2025
+ >Preparing CSV file for Training part.
 Week4 -8 September 2025
  >completed Building the efficientnet model
 Week4 -9 September 2025
  >training the model
 Week4 -10 September 2025
  >Model training Part
-week5
+Week4 -11 September 2025
+ >Completed with model training part
+Week4 -12 September 2025
+ >Tried to improve accuracy in the Training part
+Week4 -13 September 2025
+ >Started with testing part
+Week5 -15 September 2025
+ >Completed with model testing part
+Week5 -16 September 2025
+ >Started working on UI part.
+Week5 -17 September 2025
+ >Looked  into Streamlit package.
+Week5 -18 September 2025
+ >Started UI coding part. 
+Week5 -19 September 2025
+ >Making changes in UI part.
+Week5 -20 September 2025
+ >completed with the UI part.
+Week6 -22 September 2025
+ >completed the Frontend.
+Week6 -23 September 2025
+ >Started working on the backend part.
+Week6 -24 September 2025
+ >Connected backend pipeline to the Frontend.
+Week6 -25 September 2025
+ >"what if the user doesnot give a reference image?To the model"
+Week6 -26 September 2025
+ >So,Decided to use default reference image in the Backend
+Week7 -29 September 2025
+ >Started working on the single image upload option
+Week7 -30 September 2025
+ >Completed the process
+Week7 -1  September 2025
+ >Made some changes in the UI part.
+Week7 -2  September 2025
+ >Still making changes in the UI part.
+Week7 -3  September 2025
+ >Started working preparing ppt.
+
 

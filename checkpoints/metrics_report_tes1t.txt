@@ -1,14 +1,14 @@
-Test Loss: 0.6492 | Test Acc: 0.8660
+Test Loss: 0.4069 | Test Acc: 0.8570
 
                  precision    recall  f1-score   support
 
-   Missing_hole     1.0000    0.9756    0.9877        82
-     Mouse_bite     0.8365    0.9255    0.8788        94
-   Open_circuit     0.8588    0.8795    0.8690        83
-          Short     0.9398    0.9070    0.9231        86
-           Spur     0.7931    0.6866    0.7360       134
-Spurious_copper     0.8506    0.8822    0.8661       297
+   Missing_hole     1.0000    0.9146    0.9554        82
+     Mouse_bite     0.9551    0.9043    0.9290        94
+   Open_circuit     0.9211    0.8434    0.8805        83
+          Short     0.9286    0.9070    0.9176        86
+           Spur     0.7252    0.7090    0.7170       134
+Spurious_copper     0.8162    0.8822    0.8479       297
 
-       accuracy                         0.8660       776
-      macro avg     0.8798    0.8761    0.8768       776
-   weighted avg     0.8655    0.8660    0.8647       776
+       accuracy                         0.8570       776
+      macro avg     0.8910    0.8601    0.8746       776
+   weighted avg     0.8604    0.8570    0.8577       776

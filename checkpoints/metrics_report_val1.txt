@@ -1,14 +1,14 @@
-Val Loss: 0.6008 | Val Acc: 0.8708
+Val Loss: 0.4054 | Val Acc: 0.8450
 
                  precision    recall  f1-score   support
 
-   Missing_hole     1.0000    0.9634    0.9814        82
-     Mouse_bite     0.8095    0.9043    0.8543        94
-   Open_circuit     0.8953    0.9277    0.9112        83
-          Short     0.9500    0.8837    0.9157        86
-           Spur     0.8120    0.7143    0.7600       133
-Spurious_copper     0.8534    0.8851    0.8690       296
+   Missing_hole     1.0000    0.9268    0.9620        82
+     Mouse_bite     0.9759    0.8617    0.9153        94
+   Open_circuit     0.9487    0.8916    0.9193        83
+          Short     0.9625    0.8953    0.9277        86
+           Spur     0.6691    0.6992    0.6838       133
+Spurious_copper     0.7956    0.8547    0.8241       296
 
-       accuracy                         0.8708       774
-      macro avg     0.8867    0.8798    0.8819       774
-   weighted avg     0.8717    0.8708    0.8701       774
+       accuracy                         0.8450       774
+      macro avg     0.8920    0.8549    0.8720       774
+   weighted avg     0.8524    0.8450    0.8474       774

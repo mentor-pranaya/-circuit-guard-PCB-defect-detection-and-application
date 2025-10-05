@@ -59,17 +59,30 @@ def predict_roi(roi_bgr):
 def annotate_pcb(test_color, mask):
     annotated = test_color.copy()
     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
     for cnt in contours:
         if cv2.contourArea(cnt) < 100:
             continue
         x, y, w, h = cv2.boundingRect(cnt)
         roi = test_color[y:y+h, x:x+w]
         pred = predict_roi(roi)
-        cv2.rectangle(annotated, (x, y), (x+w, y+h), (0,0,255), 2)
-        cv2.putText(annotated, pred, (x, y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,0,0), 4)
-        cv2.putText(annotated, pred, (x, y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0,255,0), 2)
+        
+        # Draw rectangle with thicker RED border
+        cv2.rectangle(annotated, (x, y), (x+w, y+h), (0,0,255), 4)  # thickness=4
+        
+        # Draw text with larger font and bold outline
+        font_scale = 1.5            # Bigger text
+        thickness_outline = 5       # Black outline thickness
+        thickness_text = 3          # Green/white text thickness
+        
+        # Black outline for better readability
+        cv2.putText(annotated, pred, (x, y-15),
+                    cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0,0,0), thickness_outline)
+        
+        # White or Green actual text (I suggest white for contrast)
+        cv2.putText(annotated, pred, (x, y-15),
+                    cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0,255,0), thickness_text)
+    
     return annotated
 
 # Fast Similarity Check
@@ -138,4 +151,4 @@ if "annotated_path" in st.session_state:
     annotated = cv2.imread(st.session_state["annotated_path"])
     st.image(cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB), caption="Defects Annotated")
     with open(st.session_state["annotated_path"], "rb") as f:
-        st.download_button("⬇️ Download Annotated Image", f, file_name="annotated_result.jpg")
+        st.download_button("⬇️ Download Annotated Image", f, file_name="annotated_result.jpg") 

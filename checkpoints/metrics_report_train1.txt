@@ -1,14 +1,14 @@
-Train Loss: 0.0874 | Train Acc: 0.9688
+Train Loss: 0.2411 | Train Acc: 0.9056
 
                  precision    recall  f1-score   support
 
-   Missing_hole     0.9983    0.9949    0.9966       583
-     Mouse_bite     0.9526    0.9950    0.9734       606
-   Open_circuit     0.9844    1.0000    0.9921       568
-          Short     0.9984    0.9951    0.9967       614
-           Spur     0.9501    0.8976    0.9231       615
-Spurious_copper     0.9327    0.9356    0.9342       637
+   Missing_hole     0.9982    0.9708    0.9843       583
+     Mouse_bite     0.9437    0.9406    0.9421       606
+   Open_circuit     0.9656    0.9401    0.9527       568
+          Short     0.9849    0.9577    0.9711       614
+           Spur     0.8174    0.7496    0.7820       615
+Spurious_copper     0.7615    0.8823    0.8175       637
 
-       accuracy                         0.9688      3623
-      macro avg     0.9694    0.9697    0.9693      3623
-   weighted avg     0.9688    0.9688    0.9686      3623
+       accuracy                         0.9056      3623
+      macro avg     0.9119    0.9068    0.9083      3623
+   weighted avg     0.9094    0.9056    0.9064      3623

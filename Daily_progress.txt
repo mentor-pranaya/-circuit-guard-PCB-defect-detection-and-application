@@ -34,3 +34,7 @@ Also Added the Download button to download the annotated images.
 Week6:
 Started Integrating the Backend with the Frontend.
 Successfully integrated the backend and frontend and the whole pipeline is working smoothly.
+
+Week7:
+started working on the ppt and report 
+successfully created the report and ppt

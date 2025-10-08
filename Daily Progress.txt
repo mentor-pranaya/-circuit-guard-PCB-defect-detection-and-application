@@ -137,3 +137,8 @@ Working with the required chnages optimization part.
 Date : 02/09/2025
 
 finished with the ui part and the backend pipeline
+
+
+Date : 08/10/2025
+
+Working with the report and the presentation

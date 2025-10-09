@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CircuitGuard — PCB Defect Detection</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    :root {
+      --accent: #06b6d4;
+      --muted: #6b7280;
+    }
+    .bg-animated {
+      background: linear-gradient(120deg, rgba(6,182,212,0.06), rgba(99,102,241,0.04));
+      backdrop-filter: blur(6px);
+    }
+    .loading-bar {
+      height: 6px;
+      width: 0%;
+      background: linear-gradient(90deg, #06b6d4, #6366f1);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    ::-webkit-scrollbar {width:8px;height:8px}
+    ::-webkit-scrollbar-thumb{background:rgba(99,102,241,0.2);border-radius:999px}
+    .fullscreen-overlay {
+      position: fixed;
+      top:0; left:0; width:100%; height:100%;
+      background: rgba(0,0,0,0.95);
+      display:flex; align-items:center; justify-content:center;
+      z-index:9999;
+    }
+    .fullscreen-overlay img {
+      max-width:95%; max-height:95%;
+    }
+    .zoom-btn {
+      position: absolute; top:8px; right:8px;
+      background: rgba(0,0,0,0.5); color:white; padding:6px; border-radius:50%; cursor:pointer; z-index:10;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-slate-900 via-slate-900/95 to-slate-800 text-slate-100 antialiased">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 backdrop-blur-sm bg-slate-900/60 border-b border-slate-800 p-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-cyan-400 to-indigo-500 flex items-center justify-center shadow-lg">
+        <i class="fas fa-microchip text-slate-900"></i>
+      </div>
+      <div>
+        <div class="font-semibold text-lg leading-4">CircuitGuard</div>
+        <div class="text-xs text-slate-400">PCB Defect Detection & Classification</div>
+      </div>
+    </div>
+    <div class="text-sm text-slate-400">
+      Dev: <span class="text-cyan-400 font-medium">Akash Patel</span> | Intern
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-5xl mx-auto px-4 py-8">
+    <div class="bg-slate-900/40 rounded-2xl p-5 border border-slate-800 shadow-md">
+
+      <!-- Upload -->
+      <h3 class="text-lg font-semibold mb-2">Upload PCB Image</h3>
+      <div id="dropArea" tabindex="0" role="button" class="drop-area mt-2 p-4 rounded-xl border-2 border-dashed border-slate-700 hover:border-cyan-400 transition-colors bg-animated">
+        <div class="flex flex-col items-center justify-center gap-3 py-6 pointer-events-none">
+          <i class="fas fa-upload text-3xl text-slate-300"></i>
+          <div class="text-sm text-slate-300">Drop image here or</div>
+          <label class="cursor-pointer">
+            <input id="fileInput" type="file" accept="image/*" class="hidden" />
+            <span class="inline-block px-4 py-2 bg-slate-800/60 border border-slate-700 rounded-md text-sm hover:bg-slate-800">Browse files</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="mt-4 w-full bg-slate-800/70 rounded-full overflow-hidden hidden" id="progressBarContainer">
+        <div id="progressBar" class="loading-bar"></div>
+      </div>
+
+      <!-- Results -->
+      <div id="resultSection" class="hidden mt-8 grid md:grid-cols-2 gap-6">
+        <!-- Reference PCB (LEFT) -->
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+          <h4 class="text-center text-slate-300 font-medium mb-2">Reference PCB</h4>
+          <img id="referenceImg" src="" alt="Reference PCB" class="rounded-lg w-full border border-slate-700" />
+          <div id="refInfo" class="text-sm text-center text-slate-400 mt-2"></div>
+        </div>
+
+        <!-- Annotated PCB (RIGHT) -->
+        <div class="bg-slate-900/50 p-3 rounded-xl border border-slate-800 relative">
+          <h4 class="text-center text-slate-300 font-medium mb-2">Annotated Image</h4>
+          <div class="relative">
+            <img id="annotatedImg" src="" alt="Annotated PCB" class="rounded-lg w-full border border-slate-700" />
+            <div class="zoom-btn" id="zoomBtn"><i class="fas fa-expand"></i></div>
+          </div>
+          <div id="defectInfo" class="text-sm text-center text-slate-400 mt-2">Defects will appear here</div>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="mt-6 flex gap-3">
+        <button id="runBtn" class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-md bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 transition">
+          <i class="fas fa-play"></i> Run Detection
+        </button>
+        <button id="downloadBtn" class="flex-1 px-4 py-2 rounded-md bg-amber-500 hover:bg-amber-400 transition">
+          <i class="fas fa-download"></i> Download Annotated Image
+        </button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script>
+    const fileInput = document.getElementById("fileInput");
+    const dropArea = document.getElementById("dropArea");
+    const runBtn = document.getElementById("runBtn");
+    const downloadBtn = document.getElementById("downloadBtn");
+    const progressBar = document.getElementById("progressBar");
+    const progressBarContainer = document.getElementById("progressBarContainer");
+    const annotatedImg = document.getElementById("annotatedImg");
+    const referenceImg = document.getElementById("referenceImg");
+    const resultSection = document.getElementById("resultSection");
+    const refInfo = document.getElementById("refInfo");
+    const defectInfo = document.getElementById("defectInfo");
+    const zoomBtn = document.getElementById("zoomBtn");
+
+    let selectedFile = null;
+    let annotatedBase64 = "";
+
+    dropArea.addEventListener("click", () => fileInput.click());
+    dropArea.addEventListener("dragover", e => e.preventDefault());
+    dropArea.addEventListener("drop", e => {
+      e.preventDefault();
+      if (e.dataTransfer.files.length) {
+        selectedFile = e.dataTransfer.files[0];
+        showFileName(selectedFile.name);
+      }
+    });
+    fileInput.addEventListener("change", e => {
+      if (e.target.files.length) {
+        selectedFile = e.target.files[0];
+        showFileName(selectedFile.name);
+      }
+    });
+
+    function showFileName(name) {
+      dropArea.innerHTML = `
+        <div class="text-center text-slate-300 py-4">
+          <i class="fas fa-check-circle text-green-400 text-2xl mb-1"></i>
+          <div class="text-sm">File selected: <span class="text-cyan-400">${name}</span></div>
+        </div>
+      `;
+    }
+
+    runBtn.addEventListener("click", async () => {
+      if (!selectedFile) return alert("Please select a PCB image first.");
+      progressBarContainer.classList.remove("hidden");
+      progressBar.style.width = "0%";
+      resultSection.classList.add("hidden");
+      let width = 0;
+      const interval = setInterval(() => {
+        width = Math.min(width + Math.random() * 15, 95);
+        progressBar.style.width = width + "%";
+      }, 200);
+
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      try {
+        const res = await fetch("http://127.0.0.1:5000/detect", { method: "POST", body: formData });
+        const data = await res.json();
+
+        clearInterval(interval);
+        progressBar.style.width = "100%";
+
+        annotatedBase64 = data.annotated;
+        annotatedImg.src = "data:image/jpeg;base64," + data.annotated;
+        referenceImg.src = "data:image/jpeg;base64," + data.reference;
+        refInfo.innerText = `Reference: ${data.reference_name} | Similarity: ${data.similarity.toFixed(3)}`;
+
+        if (data.defects && data.defects.length) {
+          const defectsText = data.defects.map(d => `${d.type}: ${d.count}`).join(" | ");
+          defectInfo.innerText = defectsText;
+        } else {
+          defectInfo.innerText = "No defects detected.";
+        }
+
+        resultSection.classList.remove("hidden");
+        setTimeout(() => progressBarContainer.classList.add("hidden"), 1000);
+      } catch (err) {
+        clearInterval(interval);
+        progressBarContainer.classList.add("hidden");
+        alert("Error during detection. Please ensure backend is running.");
+        console.error(err);
+      }
+    });
+
+    downloadBtn.addEventListener("click", () => {
+      if (!annotatedBase64) return alert("Run detection first.");
+      const a = document.createElement("a");
+      a.href = "data:image/jpeg;base64," + annotatedBase64;
+      a.download = "annotated_pcb.jpg";
+      a.click();
+    });
+
+    // Zoom / Fullscreen
+    zoomBtn.addEventListener("click", () => {
+      const overlay = document.createElement("div");
+      overlay.className = "fullscreen-overlay";
+      const img = document.createElement("img");
+      img.src = annotatedImg.src;
+      const closeBtn = document.createElement("div");
+      closeBtn.className = "zoom-btn";
+      closeBtn.innerHTML = '<i class="fas fa-compress"></i>';
+      closeBtn.onclick = () => document.body.removeChild(overlay);
+      overlay.appendChild(img);
+      overlay.appendChild(closeBtn);
+      document.body.appendChild(overlay);
+    });
+  </script>
+</body>
+</html>

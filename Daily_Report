@@ -46,9 +46,24 @@ SEP 11th:Reached till 92% adjusting the parameters to improve the accuracy.
 SEP 12th:Started working on testing.
 SEP 13th:Done working with testing part.
 
-WEEK-5(WEB UI AND BACKEND INTEGRATION)
+WEEK-5(WEB UI)
 SEP 15TH:Went through UI.
 SEP 16TH:Decided to work on HTML,CSS,JS.
 SEP 17th: Started working on Frontend.
-SEP 18TH: Completed UI part and started backend pipeline using Flask,torch
-SEP 19th: Completed both UI and backend integration with UI part and got 100% accuracy of prediction results by using best_checkpoint.
+SEP 18TH: Completed UI part 
+
+WEEK-6(Backend Integration)
+SEP 21st:started backend pipeline using Flask,torch
+SEP 22th: Completed both UI and backend integration with UI part and got 100% accuracy of prediction results by using best_checkpoint.
+
+WEEK-7
+SEP 29th:Working on the single image processing the defect image only.
+SEP 30th:Done working withe the single image processing got correct output.
+OCT 1st:Started working on the presentation.
+OCT 3rd:Working on presentation.
+WEEK-8
+OCT 6th:Done working with PPT
+OCT 7TH:Started working on report
+OCT 8th:Done presentation
+OCT 9th:Done report
+OCT 10th:uploaded both report and ppt.

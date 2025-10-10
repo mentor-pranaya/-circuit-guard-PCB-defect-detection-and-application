@@ -58,8 +58,6 @@ Linux/Mac:
 
 source venv/bin/activate
 
-3️⃣ Install Requirements pip install -r requirements.txt
-
 4️⃣ Run the App streamlit run app.py
 
 Usage : 
@@ -109,5 +107,6 @@ Explainable AI for visualizing feature importance
 Conclusion : 
 
 This project demonstrates the use of AI + Computer Vision for automated PCB defect detection. It reduces manual inspection time, increases accuracy, and provides a scalable solution for electronics manufacturing quality control
+
 
 

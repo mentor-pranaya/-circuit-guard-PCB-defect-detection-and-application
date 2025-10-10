@@ -1,20 +1,21 @@
 ⚡ PCB Defect Detection System
+
 📖 Overview
 
-Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures.
-This project presents an AI-powered defect detection system that automatically:
+* Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures.
+* This project presents an AI-powered defect detection system that automatically:
 
-Compares a golden PCB (reference) with a defected PCB
+* Compares a golden PCB (reference) with a defected PCB
 
-Detects abnormal regions through image subtraction
+* Detects abnormal regions through image subtraction
 
-Extracts Regions of Interest (ROIs) for detailed inspection
+* Extracts Regions of Interest (ROIs) for detailed inspection
 
-Classifies defects using a deep learning model (EfficientNet-B4)
+* Classifies defects using a deep learning model (EfficientNet-B4)
 
-Produces annotated images and prediction reports
+* Produces annotated images and prediction reports
 
-A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
+* A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
 
 🛠 Features
 

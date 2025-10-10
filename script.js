@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const refInput = document.getElementById('ref-input');
+    // MODIFIED: Removed variables for the reference image input and preview
     const testInput = document.getElementById('test-input');
-    const refPreview = document.getElementById('ref-preview');
     const testPreview = document.getElementById('test-preview');
     const detectBtn = document.getElementById('detect-btn');
     const resultsSection = document.getElementById('results-section');
@@ -9,8 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('error-message');
     const annotatedImage = document.getElementById('annotated-image');
     const predictionsList = document.getElementById('predictions-list');
+    const downloadBtn = document.getElementById('download-btn');
 
-    // Function to handle image preview
+    // This preview function remains the same but will only be used for the test image
     const setupPreview = (input, preview) => {
         input.addEventListener('change', (event) => {
             const file = event.target.files[0];
@@ -25,76 +25,80 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    setupPreview(refInput, refPreview);
+    // MODIFIED: Removed the call for the reference input
     setupPreview(testInput, testPreview);
 
-    // Main detection logic
     detectBtn.addEventListener('click', async () => {
-        const refFile = refInput.files[0];
+        // MODIFIED: Only get the test file
         const testFile = testInput.files[0];
 
-        if (!refFile || !testFile) {
-            alert('Please upload both a reference and a test image.');
+        // MODIFIED: Updated the check to only look for the test image
+        if (!testFile) {
+            alert('Please upload a test image.');
             return;
         }
 
-        // --- UI updates for processing ---
+        // --- The UI logic for showing the loader remains the same ---
         detectBtn.disabled = true;
         detectBtn.textContent = 'Processing...';
         resultsSection.classList.remove('hidden');
         loader.classList.remove('hidden');
         errorMessage.classList.add('hidden');
         annotatedImage.style.display = 'none';
+        downloadBtn.classList.add('hidden');
         predictionsList.innerHTML = '';
 
-        // --- Prepare data and call API ---
         const formData = new FormData();
-        formData.append('ref_image', refFile);
+        // MODIFIED: Only append the test_image. The ref_image is removed.
         formData.append('test_image', testFile);
 
         try {
-            const response = await fetch('/api/predict', {
-                method: 'POST',
-                body: formData,
-            });
-
+            // The fetch request is the same URL, but now sends less data
+            const response = await fetch('/api/predict', { method: 'POST', body: formData });
             const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error(result.error || 'An unknown error occurred.');
-            }
-            
-            // --- Display results ---
+            if (!response.ok) throw new Error(result.error || 'An unknown error occurred.');
             displayResults(result);
-
         } catch (error) {
             errorMessage.textContent = `Error: ${error.message}`;
             errorMessage.classList.remove('hidden');
             console.error('Prediction failed:', error);
         } finally {
-            // --- Reset UI ---
             loader.classList.add('hidden');
             detectBtn.disabled = false;
             detectBtn.textContent = '🚀 Detect Defects';
         }
     });
 
+    // --- The displayResults function does not need any changes ---
     function displayResults(data) {
-        // Display annotated image
         annotatedImage.src = data.annotated_image;
         annotatedImage.style.display = 'block';
 
-        // Display predictions list
+        predictionsList.innerHTML = '';
         if (data.predictions && data.predictions.length > 0) {
             data.predictions.forEach(pred => {
                 const li = document.createElement('li');
-                li.textContent = `Defect: ${pred.label} (Confidence: ${pred.confidence})`;
+                // A small text improvement for clarity in the UI
+                if (pred.label === 'No Defects Found') {
+                    li.textContent = pred.label;
+                } else {
+                    li.textContent = `Defect: ${pred.label} (Confidence: ${pred.confidence})`;
+                }
                 predictionsList.appendChild(li);
             });
         } else {
-            const li = document.createElement('li');
-            li.textContent = 'No defects found.';
-            predictionsList.appendChild(li);
+            predictionsList.innerHTML = '<li>Could not determine defects.</li>';
+        }
+
+        // Show download button below predictions, but only if an image was processed
+        if (data.annotated_image) {
+            downloadBtn.classList.remove('hidden');
+            downloadBtn.onclick = () => {
+                const link = document.createElement('a');
+                link.href = annotatedImage.src;
+                link.download = 'annotated_result.png';
+                link.click();
+            };
         }
     }
 });

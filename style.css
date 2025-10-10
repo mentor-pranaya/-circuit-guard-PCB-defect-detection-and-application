@@ -32,10 +32,10 @@ header p {
     margin-bottom: 2rem;
 }
 
-.upload-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
+/* NEW: This replaces the old 'upload-grid' to center the single box */
+.upload-section {
+    display: flex;
+    justify-content: center;
     margin-bottom: 2rem;
 }
 
@@ -44,7 +44,11 @@ header p {
     border-radius: 10px;
     padding: 1.5rem;
     background-color: #f8fafc;
+    width: 100%;      /* Make it responsive */
+    max-width: 500px; /* Constrain width on larger screens */
 }
+
+/* The original .upload-grid class is no longer needed with the updated HTML */
 
 .upload-box h3 {
     margin-top: 0;
@@ -72,7 +76,7 @@ input[type="file"] { display: none; }
     max-height: 250px;
     border-radius: 8px;
     border: 1px solid #e2e8f0;
-    display: none; /* Hidden by default */
+    display: none;
 }
 
 #detect-btn {
@@ -86,6 +90,7 @@ input[type="file"] { display: none; }
     font-weight: 700;
     transition: background-color 0.3s;
     width: 50%;
+    max-width: 300px; /* Added max-width for better scaling */
     margin: 0 auto;
 }
 
@@ -93,13 +98,22 @@ input[type="file"] { display: none; }
 #detect-btn:disabled { background-color: #9ca3af; cursor: not-allowed; }
 
 #results-section { margin-top: 2rem; text-align: left; }
-#results-section h2 { text-align: center; }
+#results-section h2 { text-align: center; color: #1e3a5f; }
 
 .result-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 2rem;
     margin-top: 1rem;
+    align-items: start;
+}
+
+.annotated-image-container h3, .predictions-container h3 {
+    margin-top: 0;
+    color: #3a5b82;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .annotated-image-container img {
@@ -119,7 +133,23 @@ input[type="file"] { display: none; }
     border-radius: 8px;
     margin-bottom: 0.5rem;
     font-weight: 500;
+    border-left: 5px solid #3b82f6;
 }
+
+#download-btn {
+    background-color: #3b82f6;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+#download-btn:hover { background-color: #2563eb; }
 
 .hidden { display: none; }
 
@@ -143,4 +173,17 @@ input[type="file"] { display: none; }
     border: 1px solid #ef4444;
     text-align: center;
     font-weight: 500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .result-content {
+        grid-template-columns: 1fr;
+    }
+    .container {
+        padding: 1.5rem;
+    }
+    header h1 {
+        font-size: 2rem;
+    }
 }

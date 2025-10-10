@@ -1,4 +1,4 @@
-⚡ PCB Defect Detection System 📖 Overview
+PCB Defect Detection System Overview
 
 Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures. This project presents an AI-powered defect detection system that automatically:
 
@@ -14,7 +14,7 @@ Produces annotated images and prediction reports
 
 A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
 
-🛠 Features
+Features : 
 
 📸 Automatic Defect Detection – Detects differences between reference and defected boards
 
@@ -26,7 +26,7 @@ A Streamlit web interface makes the system interactive, simple to use, and effic
 
 🌐 Streamlit UI – User-friendly frontend to upload, visualize, and download results
 
-⚙️ Tech Stack
+Tech Stack :
 
 Language: Python
 
@@ -40,7 +40,7 @@ Data Handling: Pandas, NumPy
 
 Frontend: Streamlit
 
-🚀 Getting Started
+Getting Started : 
 
 1️⃣ Clone Repository 
 
@@ -62,13 +62,13 @@ source venv/bin/activate
 
 4️⃣ Run the App streamlit run app.py
 
-💻 Usage
+Usage : 
 
 Open the app at http://localhost:8501
 
 Upload:
 
-Reference PCB (Golden board)
+Reference PCB 
 
 Defected PCB
 
@@ -80,7 +80,7 @@ View results:
 
 ✅ Downloadable output image
 
-🔬 Core Workflow
+Core Workflow :
 
 Image Subtraction → Highlight differences between golden & defected PCBs
 
@@ -92,11 +92,11 @@ Classification → Run each ROI through EfficientNet-B4 model
 
 Annotation & Reporting → Overlay bounding boxes & save logs
 
-📊 Output Samples
+Output Samples : 
 
 ✅ Annotated PCB Image
 
-🌱 Future Enhancements
+Future Enhancements : 
 
 Real-time detection using camera feed
 
@@ -106,7 +106,8 @@ Integration with manufacturing pipelines
 
 Explainable AI for visualizing feature importance
 
-✨ Conclusion
+Conclusion : 
 
 This project demonstrates the use of AI + Computer Vision for automated PCB defect detection. It reduces manual inspection time, increases accuracy, and provides a scalable solution for electronics manufacturing quality control
+
 

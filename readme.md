@@ -1,74 +1,112 @@
-AI-CircuitGuard – Milestone 1 (Preprocessing & Subtraction)
+⚡ PCB Defect Detection System 📖 Overview
 
-In Milestone 1, the main goal is to prepare the dataset, separate template and test images, align them, apply image subtraction with Otsu’s thresholding, and finally visualize the detected defects. 
+Printed Circuit Boards (PCBs) are critical components in modern electronics, and even minor defects can lead to system failures. This project presents an AI-powered defect detection system that automatically:
 
-The dataset contains four main folders:  
-1. Annotations/ – XML files describing the bounding boxes of defects for six classes (Missing_hole, Mouse_bite, Open_circuit, Short, Spur, Spurious_copper).  
-2. images/ – the defective PCB images divided per defect type.  
-3. PCB_USED/ – contains 10 defect-free template PCB images.  
-4. rotation/ – contains augmented rotated images and rotation angle text files.  
+Compares a golden PCB (reference) with a defected PCB
 
----
+Detects abnormal regions through image subtraction
 
-Step 1: Template and Test Separation  
-- Defect-free images in PCB_USED/ are used as templates, and defective images in images/ are used as test samples.  
-- Run the script:  
-  python milestone1/generate_template_test_pairs.py
-- Outputs:  
-  - outputs_pairs/templates/ → template images  
-  - outputs_pairs/tests/ → test images  
-  - pairs_mapping.csv → mapping of templates to tests  
+Extracts Regions of Interest (ROIs) for detailed inspection
 
----
+Classifies defects using a deep learning model (EfficientNet-B4)
 
-Step 2: Alignment  
-- Templates and test images are aligned to match pixel-to-pixel before subtraction.  
-- Even small shifts or rotations between template and test PCB images can produce false differences.  
-- Run the script:  
-  python milestone1/align_pairs.py
-- Output: outputs_aligned/ containing aligned template–test pairs.  
+Produces annotated images and prediction reports
 
----
+A Streamlit web interface makes the system interactive, simple to use, and efficient for PCB quality inspection.
 
-Step 3: Subtraction with Otsu Thresholding  
-- Subtract aligned template and test images → obtain grayscale difference image.  
-- Apply Otsu’s thresholding → convert difference into a binary defect mask.  
-- Apply morphological filtering → remove noise and highlight only true defect regions.  
-- Run the script:  
-  python milestone1/subtraction_pipeline.py
-- Outputs:  
-  - outputs_subtraction/diffs/ → difference images  
-  - outputs_subtraction/masks/ → binary masks  
+🛠 Features
 
----
+📸 Automatic Defect Detection – Detects differences between reference and defected boards
 
+🖼 ROI Extraction – Crops out defected regions for classification
 
+🤖 AI Classification – Uses EfficientNet-B4 trained on PCB defect dataset
 
-Overall Workflow  
-Dataset → Separation → Alignment → Subtraction (Otsu) 
+📊 Prediction Logs – Exports results as a CSV file
 
----
+🌐 Streamlit UI – User-friendly frontend to upload, visualize, and download results
 
-Deliverables  
-- Scripts:  
-  - generate_template_test_pairs.py  
-  - align_pairs.py  
-  - subtraction_pipeline.py  
-  - visualize_results.py  
-- Outputs:  
-  - outputs_pairs/  
-  - outputs_aligned/  
-  - outputs_subtraction/  
-  - outputs_visualizations/  
-- Report:  
-  - README.md  
+⚙️ Tech Stack
 
----
+Language: Python
 
-Summary  
-Milestone 1 focuses entirely on preprocessing and defect isolation using classical image processing techniques (alignment, subtraction, thresholding) and does not yet involve training a deep learning model.  
+Deep Learning: PyTorch, Torchvision
 
-This ensures that:  
-- The dataset is clean,  
-- The defect regions are correctly isolated,  
-- The workflow for PCB defect detection is properly set up.  
+Model: EfficientNet-B4 (fine-tuned)
+
+Image Processing: OpenCV
+
+Data Handling: Pandas, NumPy
+
+Frontend: Streamlit
+
+🚀 Getting Started
+
+1️⃣ Clone Repository 
+
+cd repository name
+
+2️⃣ Create Virtual Environment python -m venv venv
+
+Activate:
+
+Windows:
+
+venv\Scripts\activate
+
+Linux/Mac:
+
+source venv/bin/activate
+
+3️⃣ Install Requirements pip install -r requirements.txt
+
+4️⃣ Run the App streamlit run app.py
+
+💻 Usage
+
+Open the app at http://localhost:8501
+
+Upload:
+
+Reference PCB (Golden board)
+
+Defected PCB
+
+Click Run Detection
+
+View results:
+
+✅ Annotated PCB with bounding boxes + defect labels
+
+✅ Downloadable output image
+
+🔬 Core Workflow
+
+Image Subtraction → Highlight differences between golden & defected PCBs
+
+Defect Mask Generation → Binary mask of detected defects
+
+ROI Extraction → Crop defected areas into patches
+
+Classification → Run each ROI through EfficientNet-B4 model
+
+Annotation & Reporting → Overlay bounding boxes & save logs
+
+📊 Output Samples
+
+✅ Annotated PCB Image
+
+🌱 Future Enhancements
+
+Real-time detection using camera feed
+
+Support for multi-class PCB defects
+
+Integration with manufacturing pipelines
+
+Explainable AI for visualizing feature importance
+
+✨ Conclusion
+
+This project demonstrates the use of AI + Computer Vision for automated PCB defect detection. It reduces manual inspection time, increases accuracy, and provides a scalable solution for electronics manufacturing quality control
+
